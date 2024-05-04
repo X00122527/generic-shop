@@ -1,4 +1,40 @@
-:root {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+svg {
+  margin: auto;
+  color: aqua;
+}
+
+.under_lines{
+  width: 70%;
+  border-top: 1px solid #b6b6b6;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+
+.divider{
+  position: relative;
+  text-align: center;
+  /* position: absolute; */
+}
+
+#perks .divider::after {
+  background: black;
+}
+
+.divider:not(:last-of-type):after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  content: "";
+}
+
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -65,4 +101,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
