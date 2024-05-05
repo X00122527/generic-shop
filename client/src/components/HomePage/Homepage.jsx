@@ -6,8 +6,8 @@ function Homepage() {
 
   return (
     <>
-      <div id="top" className='w-full bg-red-200 '>
-        <img src="https://picsum.photos/seed/picsum/200/300" className='w-full h-96'></img>
+      <div id="top" className='w-full bg-gray-200 '>
+        <img src="..\..\custom-files\top.jpg" className='mx-auto'></img>
       </div>
 
       <div id="perks" className='grid items-center h-48 grid-cols-2 bg-yellow-200 sm:grid-cols-4 '>
@@ -46,16 +46,21 @@ function Homepage() {
 
       </div>
 
-      <div id='products' className='grid w-full grid-cols-4 mx-auto mt-12 gap-x4 place-items-center'>
+      <div id='products' className='grid w-full grid-cols-2 mx-auto mt-12 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center'>
           {Array(repeat).fill(0).map((index) =>
 
           <div id="product">
-            <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40'></img>
+            <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-56 md:h-56'></img>
             <p class='title'>Item name</p>
             <div class='under_lines'></div>
             <h3 class='price'>$ 12.22 </h3>
           </div>
           )}
+      </div>
+
+      <div id='action'>
+
+          
       </div>
 
     </>

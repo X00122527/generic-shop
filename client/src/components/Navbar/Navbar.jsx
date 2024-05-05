@@ -11,7 +11,7 @@ function Navbar() {
   <div className="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
   <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
       <img src={logo} className="h-36" alt="Flowbite Logo" />
-      <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Company</span>
+      {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Company</span> */}
   </a>
   <div className="flex md:order-2">
     <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1">
