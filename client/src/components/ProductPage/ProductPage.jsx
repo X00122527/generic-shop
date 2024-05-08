@@ -17,7 +17,7 @@ function ProductPage() {
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
         "brand": "Brand",
         "options_1": ["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
-        "options_2": ["S", "M", "L", "XL"]
+        "options_2": ["Small", "Medium", "Large", "ExtraLarge"]
     }
 
     const getConfigurableProps = () => ({
@@ -25,7 +25,7 @@ function ProductPage() {
         showStatus: true,
         showIndicators: true,
         infiniteLoop: true,
-        showThumbs: false,  // while this work it will cause issues on scrolling focus
+        showThumbs: true,  // while this work it will cause issues on scrolling focus
         useKeyboardArrows: true,
         autoPlay: false,
         stopOnHover: true,
@@ -36,7 +36,7 @@ function ProductPage() {
         thumbWidth: 100,
         selectedItem: 0,
         interval: 2000,
-        transitionTime:  500,
+        transitionTime: 500,
         preventMovementUntilSwipeScrollTolerance: true,
         swipeScrollTolerance: 50,
         axis: 'horizontal'
@@ -44,66 +44,107 @@ function ProductPage() {
     });
 
 
-  return (
-    <div className='grid w-full grid-cols-1 mx-auto md:grid-cols-2 md:w-3/4 gap-x-4'>
+    return (
+        <div className='grid w-full grid-cols-1 mx-auto md:grid-cols-2 lg:w-3/4 sm:w-11/12 gap-x-2'>
 
-        <div id="carousel">
+            <div id="carousel" className='col-span-2 md:col-span-1'>
+                <Carousel {...getConfigurableProps()}>
+                    {product.images.map((image, index) => (
+                        <div key={index}>
+                            <img src={image} />
+                        </div>
+                    ))}
+                </Carousel>
+            </div>
 
-        <Carousel {...getConfigurableProps()}>
-            {product.images.map((image, index) => (
-                <div key={index}>
-                    <img src={image}  />
-                </div>
-                ))} 
-            </Carousel>
-        </div>
-
-        <div id="product-details" className=''>
-                <h2>{product.title}</h2>
+            <div id="product-details" className='col-span-2 md:col-span-1 mx-[2.5%]'>
+                {/* title */}
+                <h1 className='text-3xl leading-tight'>{product.title}</h1>
+                <div class='under_lines w-7/12'></div>
+                {/* price */}
+                <p className='text-[#272727] font-semibold'>{product.price}</p>
+                {/* brand */}
                 <p>By {product.brand}</p>
 
                 {/* options go here */}
-                <p>Color </p>
-                <div className='inline-flex gap-x-2'>
-                    {product.options_1.map((color, index) => (
-                        <>
-                        <div className={`h-6 w-6 rounded-lg ${color}`}></div>
-                        {/* <p>{color}</p> */}
-                        </>
-                    ))}
-                </div>
-                
-                <p>Sizes</p>
-                <div className='inline-flex gap-x-2 '>
-                    {product.options_2.map((size, index) => (
-                        <>
-                        <div className='w-6 h-6 mx-auto border-2 '>{size}</div>
-                        {/* <p>{color}</p> */}
-                        </>
-                    ))}
+                <div className='my-2'>
+                    <p className='text-sm'>Color: {product.options_1[0]}</p>
+                    <div className='inline-flex items-center my-2 gap-x-2'>
+                        {product.options_1.map((color, index) => (
+                            <>
+                                <button className={`h-6 w-6 rounded-lg ${color} focus:h-7 focus:w-7 blur:h-7 blur:w-7`}></button>
+                                {/* <p>{color}</p> */}
+                            </>
+                        ))}
+                    </div>
                 </div>
 
+                <div className='my-2'>
+                {/* <p>Sizes</p> */}
+
+                    <div className='inline-flex my-2 gap-x-2 '>
+                        {product.options_2.map((size, index) => (
+                            <>
+                                <button className='p-1 mx-auto border-2 focus:border-2 focus:border-black'>{size}</button>
+                                {/* <p>{color}</p> */}
+                            </>
+                        ))}
+                    </div>
+                </div>
+
+                {/* call to action */}
+                <hr></hr>
+                <div className='my-4'>
+                <div className='my-4'>
+                    <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
+                    <div class="relative flex items-center ">
+                        <button type="button" id="decrement-button" data-input-counter-decrement="quantity-input" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                            <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
+                            </svg>
+                        </button>
+                        <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="999" required />
+                        <button type="button" id="increment-button" data-input-counter-increment="quantity-input" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                            <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
+                            </svg>
+                        </button>
+                    </div>
+
+                </div>
+                <button type="button" className='w-full px-4 py-2 border-2 border-gray-700 rounded'>Add to cart</button>
+                </div>
+
+                <hr></hr>
+
+                {/* Product description */}
+                <h2 className='text-xl font-semibold'>Description</h2>
+                <p>{product.description}</p>
+
+                {/* Product features & Details */}
+                        
+                {/* Shipping & Returns */}
+
+            </div>
+
+            <div id="related-items" className='col-span-2 mt-10 '>
+                {/* product card goes here */}
+                <h2>Related products</h2>
+                <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-stretch'>
+                    {Array(4).fill(0).map((index) =>
+
+                        <div id="product">
+                            <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-48 md:h-48'></img>
+                            <p class='title'>Item name</p>
+                            <div class='under_lines'></div>
+                            <h3 class='price'>$ 12.22 </h3>
+                        </div>
+                    )}
+                </div>
+            </div>
 
         </div>
-
-        <div id="related-items" className='col-span-2 mt-10'>
-            {/* product card goes here */}
-            <h2>Related products</h2>
-            <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center'>
-          {Array(4).fill(0).map((index) =>
-
-          <div id="product">
-            <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-48 md:h-48'></img>
-            <p class='title'>Item name</p>
-            <div class='under_lines'></div>
-            <h3 class='price'>$ 12.22 </h3>
-          </div>
-          )}
-      </div>
-        </div>
-
-    </div>
-  )
+    )
 }
 
 export default ProductPage
