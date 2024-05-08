@@ -60,7 +60,7 @@ function ProductPage() {
             <div id="product-details" className='col-span-2 md:col-span-1 mx-[2.5%]'>
                 {/* title */}
                 <h1 className='text-3xl leading-tight'>{product.title}</h1>
-                <div class='under_lines w-7/12'></div>
+                <div className='w-7/12 under_lines'></div>
                 {/* price */}
                 <p className='text-[#272727] font-semibold'>{product.price}</p>
                 {/* brand */}
@@ -80,7 +80,7 @@ function ProductPage() {
                 </div>
 
                 <div className='my-2'>
-                {/* <p>Sizes</p> */}
+                    {/* <p>Sizes</p> */}
 
                     <div className='inline-flex my-2 gap-x-2 '>
                         {product.options_2.map((size, index) => (
@@ -95,34 +95,50 @@ function ProductPage() {
                 {/* call to action */}
                 <hr></hr>
                 <div className='my-4'>
-                <div className='my-4'>
-                    <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
-                    <div class="relative flex items-center ">
-                        <button type="button" id="decrement-button" data-input-counter-decrement="quantity-input" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
-                            <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
-                            </svg>
-                        </button>
-                        <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="999" required />
-                        <button type="button" id="increment-button" data-input-counter-increment="quantity-input" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
-                            <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                            </svg>
-                        </button>
-                    </div>
+                    <div className='my-4'>
+                        <label for="quantity-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
+                        <div className="relative flex items-center ">
+                            <button type="button" id="decrement-button" data-input-counter-decrement="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-s-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
+                                </svg>
+                            </button>
+                            <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="999" required />
+                            <button type="button" id="increment-button" data-input-counter-increment="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-e-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
+                                </svg>
+                            </button>
+                        </div>
 
-                </div>
-                <button type="button" className='w-full px-4 py-2 border-2 border-gray-700 rounded'>Add to cart</button>
+                    </div>
+                    <button type="button" className='w-full px-4 py-2 border-2 border-gray-700 rounded'>Add to cart</button>
                 </div>
 
                 <hr></hr>
 
                 {/* Product description */}
-                <h2 className='text-xl font-semibold'>Description</h2>
-                <p>{product.description}</p>
+                {/* <h2 className='text-xl font-semibold'>Description</h2>
+                <p>{product.description}</p> */}
+
+                <div id="accordion-collapse" data-accordion="collapse" className='my-4'>
+                    <div id="accordion-collapse-heading-1" class="items-center inline-flex w-full relative" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
+                        <span className='text-xl font-semibold'>Description</span>
+                        <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                        </svg>
+                        
+                    </div>
+
+                    <div id="accordion-collapse-body-1" className="hidden" aria-labelledby="accordion-collapse-heading-1">
+                        <div className="p-5 ">
+                            <p className="mb-2">{product.description}</p>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Product features & Details */}
-                        
+
                 {/* Shipping & Returns */}
 
             </div>
@@ -135,9 +151,9 @@ function ProductPage() {
 
                         <div id="product">
                             <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-48 md:h-48'></img>
-                            <p class='title'>Item name</p>
-                            <div class='under_lines'></div>
-                            <h3 class='price'>$ 12.22 </h3>
+                            <p className='title'>Item name</p>
+                            <div className='under_lines'></div>
+                            <h3 className='price'>$ 12.22 </h3>
                         </div>
                     )}
                 </div>
