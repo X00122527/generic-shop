@@ -1,4 +1,5 @@
 import React from 'react'
+import 'flowbite'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 function ProductPage() {
@@ -14,10 +15,24 @@ function ProductPage() {
             "https://picsum.photos/400.jpg",
             "https://picsum.photos/400.jpg",
         ],
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
         "brand": "Brand",
         "options_1": ["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
-        "options_2": ["Small", "Medium", "Large", "ExtraLarge"]
+        "options_2": ["Small", "Medium", "Large", "ExtraLarge"],
+        "accordion_1": {
+            "title": "Description",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
+            "expanded": true
+        },
+        "accordion_2": {
+            "title": "Product features & Details",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
+            "expanded": false
+        },
+        "accordion_3": {
+            "title": "Shipping & Returns",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
+            "expanded": false
+        },
     }
 
     const getConfigurableProps = () => ({
@@ -96,17 +111,17 @@ function ProductPage() {
                 <hr></hr>
                 <div className='my-4'>
                     <div className='my-4'>
-                        <label for="quantity-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
+                        <label htmlFor="quantity-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
                         <div className="relative flex items-center ">
                             <button type="button" id="decrement-button" data-input-counter-decrement="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-s-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                 <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16" />
                                 </svg>
                             </button>
                             <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="999" required />
                             <button type="button" id="increment-button" data-input-counter-increment="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-e-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                 <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                                 </svg>
                             </button>
                         </div>
@@ -117,29 +132,59 @@ function ProductPage() {
 
                 <hr></hr>
 
-                {/* Product description */}
-                {/* <h2 className='text-xl font-semibold'>Description</h2>
-                <p>{product.description}</p> */}
+                {/* Accordion 1 e.g. Product description */}
 
                 <div id="accordion-collapse" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-1" class="items-center inline-flex w-full relative" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
-                        <span className='text-xl font-semibold'>Description</span>
+                    <div id="accordion-collapse-heading-1" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-1" aria-expanded={product.accordion_1.expanded} aria-controls="accordion-collapse-body-1">
+                        <span className='text-xl font-semibold'>{product.accordion_1.title}</span>
                         <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
                         </svg>
                         
                     </div>
 
                     <div id="accordion-collapse-body-1" className="hidden" aria-labelledby="accordion-collapse-heading-1">
                         <div className="p-5 ">
-                            <p className="mb-2">{product.description}</p>
+                            <p className="mb-2">{product.accordion_1.text}</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Product features & Details */}
+                {/* Accordion 2 e.g.  Product features & Details */}
 
-                {/* Shipping & Returns */}
+                <div id="accordion-collapse-2" data-accordion="collapse" className='my-4'>
+                    <div id="accordion-collapse-heading-2" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-2" aria-expanded={product.accordion_2.expanded} aria-controls="accordion-collapse-body-2">
+                        <span className='text-xl font-semibold'>{product.accordion_2.title}</span>
+                        <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                        </svg>
+                        
+                    </div>
+
+                    <div id="accordion-collapse-body-2" className="hidden" aria-labelledby="accordion-collapse-heading-2">
+                        <div className="p-5 ">
+                            <p className="mb-2">{product.accordion_2.text}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Accordion 3 e.g. Shipping & Returns */}
+
+                <div id="accordion-collapse-3" data-accordion="collapse" className='my-4'>
+                    <div id="accordion-collapse-heading-3" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-3" aria-expanded={product.accordion_3.expanded} aria-controls="accordion-collapse-body-3">
+                        <span className='text-xl font-semibold'>{product.accordion_3.title}</span>
+                        <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                        </svg>
+                        
+                    </div>
+
+                    <div id="accordion-collapse-body-3" className="hidden" aria-labelledby="accordion-collapse-heading-3">
+                        <div className="p-5 ">
+                            <p className="mb-2">{product.accordion_3.text}</p>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
