@@ -1,9 +1,43 @@
 import React from 'react'
 import '../../index.css'
+import ProductPage from '../ProductPage/ProductPage';
+import './home.css'
 
 function Homepage() {
 
   const repeat = 4;
+
+  const theme = {
+    action: {
+      left_col: {
+        type: "text", // text or image
+        header: "Ready to rock?",
+        content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam",
+        styling: ""
+      },
+      "right_col": {
+        type: "image", // text or image
+        header: "",
+        content: "https://picsum.photos/536/354",
+        styling: ""
+      },
+
+    social: {
+      left_col: {
+        type: "text", // text or image
+        header: "Ready to rock?",
+        content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam",
+        styling: ""
+      },
+      "right_col": {
+        type: "image", // text or image
+        header: "",
+        content: "https://picsum.photos/536/354",
+        styling: ""
+      },
+    }
+    }
+  }
 
   return (
     <>
@@ -47,7 +81,7 @@ function Homepage() {
 
       </div>
 
-      <div id='products' className='grid w-full grid-cols-2 mx-auto mt-12 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center'>
+      <div id='products' className='grid w-full grid-cols-2 my-24 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center'>
           {Array(repeat).fill(0).map((index) =>
 
           <div id="product">
@@ -59,9 +93,46 @@ function Homepage() {
           )}
       </div>
 
-      <div id='action'>
+      {/* action */}
+      <div id='action' class="grid sm:grid-cols-2 grid-cols-1 w-3/4 place-items-center mx-auto">
+          <div id='left' className=''>
+            <p className='text-4xl font-shadows'>{action.social.left_col.header}</p>
+            <p>{action.social.left_col.content}</p>
+            <div class="content">
+    <div class="arrow">
+      <div class="curve"></div>
+      <div class="point"></div>
+    </div>
+    </div> 
+          </div>
 
-          
+          <div id='right'>
+          <div id="product">
+            <img src={theme.social.right_col.content} className='w-full h-96'></img>
+            <p class='title'>Do it yourself!</p>
+          </div>
+          </div>
+      </div>
+
+
+      <div id='social' class="grid sm:grid-cols-2 grid-cols-1 w-3/4 place-items-center mx-auto">
+          <div id='left' className=''>
+            <p className='text-4xl font-shadows'>{theme.social.left_col.header}</p>
+            <p>{theme.social.left_col.content}</p>
+            <div class="content">
+    <div class="arrow">
+      <div class="curve"></div>
+      <div class="point"></div>
+    </div>
+    </div> 
+          </div>
+
+          <div id='right'>
+          <div id="product">
+            <img src={theme.social.right_col.content} className='w-full h-96'></img>
+            <p class='title'>Do it yourself!</p>
+          </div>
+          </div>
       </div>
 
     </>

@@ -962,6 +962,16 @@ input[type="range"]::-ms-fill-lower {
   margin-bottom: 1rem;
 }
 
+.my-12 {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.my-24 {
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -1054,6 +1064,18 @@ input[type="range"]::-ms-fill-lower {
   height: 2.25rem;
 }
 
+.h-80 {
+  height: 20rem;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -1103,6 +1125,14 @@ input[type="range"]::-ms-fill-lower {
   width: 100%;
 }
 
+.w-80 {
+  width: 20rem;
+}
+
+.w-3\/4 {
+  width: 75%;
+}
+
 .max-w-screen-xl {
   max-width: 1280px;
 }
@@ -1146,10 +1176,6 @@ input[type="range"]::-ms-fill-lower {
 
 .place-items-center {
   place-items: center;
-}
-
-.place-items-stretch {
-  place-items: stretch;
 }
 
 .items-center {
@@ -1375,6 +1401,10 @@ input[type="range"]::-ms-fill-lower {
   text-align: center;
 }
 
+.font-shadows {
+  font-family: Shadows Into Light, cursive;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1393,6 +1423,11 @@ input[type="range"]::-ms-fill-lower {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
 .font-medium {
@@ -1609,6 +1644,10 @@ input[type="range"]::-ms-fill-lower {
 
   .sm\:w-11\/12 {
     width: 91.666667%;
+  }
+
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sm\:grid-cols-4 {

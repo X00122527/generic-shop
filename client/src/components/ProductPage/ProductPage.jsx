@@ -75,7 +75,7 @@ function ProductPage() {
             <div id="product-details" className='col-span-2 md:col-span-1 mx-[2.5%]'>
                 {/* title */}
                 <h1 className='text-3xl leading-tight'>{product.title}</h1>
-                <div className='w-7/12 under_lines'></div>
+                {/* <div className='w-7/12 under_lines'></div> */}
                 {/* price */}
                 <p className='text-[#272727] font-semibold'>{product.price}</p>
                 {/* brand */}
@@ -189,9 +189,9 @@ function ProductPage() {
             </div>
 
             <div id="related-items" className='col-span-2 mt-10 '>
-                {/* product card goes here */}
-                <h2>Related products</h2>
-                <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-stretch'>
+                {/* product card goes here, can introduce also product slider */}
+                <h2>Related products </h2>
+                <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center '>
                     {Array(4).fill(0).map((index) =>
 
                         <div id="product">

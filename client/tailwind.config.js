@@ -8,10 +8,15 @@ export default {
 
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'shadows': ['Shadows Into Light', 'cursive'],
+        'roboto': ['Roboto', 'sans-serif'],
+      }
+    },
   },
   plugins: [
-    
+
     require('flowbite/plugin')
   ],
 }
