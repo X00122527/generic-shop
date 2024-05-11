@@ -21,22 +21,22 @@ function Homepage() {
         content: "https://picsum.photos/536/354",
         styling: ""
       },
+    },
 
     social: {
       left_col: {
-        type: "text", // text or image
-        header: "Ready to rock?",
-        content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam",
+        type: "widget", // text or image or widget
+        header: "Find us on instagram",
+        content: "Tag us in your creations and be highlighted on our instagram!",
         styling: ""
       },
       "right_col": {
-        type: "image", // text or image
+        type: "image", // text or image or widget compatible with https://lightwidget.com/
         header: "",
         content: "https://picsum.photos/536/354",
         styling: ""
       },
-    }
-    }
+    },
   }
 
   return (
@@ -82,7 +82,7 @@ function Homepage() {
       </div>
 
       <div id='products' className='grid w-full grid-cols-2 my-24 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center'>
-          {Array(repeat).fill(0).map((index) =>
+        {Array(repeat).fill(0).map((index) =>
 
           <div id="product">
             <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-56 md:h-56'></img>
@@ -90,49 +90,40 @@ function Homepage() {
             <div class='under_lines'></div>
             <h3 class='price'>$ 12.22 </h3>
           </div>
-          )}
+        )}
       </div>
 
       {/* action */}
       <div id='action' class="grid sm:grid-cols-2 grid-cols-1 w-3/4 place-items-center mx-auto">
-          <div id='left' className=''>
-            <p className='text-4xl font-shadows'>{action.social.left_col.header}</p>
-            <p>{action.social.left_col.content}</p>
-            <div class="content">
-    <div class="arrow">
-      <div class="curve"></div>
-      <div class="point"></div>
-    </div>
-    </div> 
+        <div id='left' className=''>
+          <p className='text-4xl font-shadows'>{theme.action.left_col.header}</p>
+          <p>{theme.action.left_col.content}</p>
+          <div class="content">
+            <div class="arrow">
+              <div class="curve"></div>
+              <div class="point"></div>
+            </div>
           </div>
+        </div>
 
-          <div id='right'>
+        <div id='right'>
           <div id="product">
             <img src={theme.social.right_col.content} className='w-full h-96'></img>
-            <p class='title'>Do it yourself!</p>
           </div>
-          </div>
+        </div>
       </div>
 
 
       <div id='social' class="grid sm:grid-cols-2 grid-cols-1 w-3/4 place-items-center mx-auto">
-          <div id='left' className=''>
+        <div id='left' className='h-[40svh] border-2 border-black'>
+          <script src="https://cdn.lightwidget.com/widgets/lightwidget.js"></script>
+          <iframe src="//lightwidget.com/widgets/1b414672c393505bbd3874ab6b05d7e5.html" allowtransparency="true" class="lightwidget-widget" className="w-full h-full overflow-hidden border-0"></iframe>
+        </div>
+
+        <div id='right' className=''>
             <p className='text-4xl font-shadows'>{theme.social.left_col.header}</p>
             <p>{theme.social.left_col.content}</p>
-            <div class="content">
-    <div class="arrow">
-      <div class="curve"></div>
-      <div class="point"></div>
-    </div>
-    </div> 
-          </div>
-
-          <div id='right'>
-          <div id="product">
-            <img src={theme.social.right_col.content} className='w-full h-96'></img>
-            <p class='title'>Do it yourself!</p>
-          </div>
-          </div>
+        </div>
       </div>
 
     </>
