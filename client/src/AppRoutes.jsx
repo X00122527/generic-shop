@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer'
 import Navbar from './components/Navbar/Navbar'
 import AppPaths from "./lib/appPaths";
 import ProductPage from "./components/ProductPage/ProductPage";
+import ProductsPage from "./components/ProductsPage/ProductsPage";
 
 
  class AppRoutes extends Component {
@@ -21,6 +22,7 @@ import ProductPage from "./components/ProductPage/ProductPage";
       <Routes>
           <Route path={AppPaths.HOME} element={<Homepage/>} />
           <Route path={AppPaths.TEMP} element={<ProductPage/>} />
+          <Route path={AppPaths.SHOP} element={<ProductsPage/>} />
         </Routes>
         <Footer></Footer>
 

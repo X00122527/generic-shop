@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../index.css'
 import ProductPage from '../ProductPage/ProductPage';
 import './home.css'
 
+
 function Homepage() {
 
-  const repeat = 4;
+  const [repeat, setRepeat] = useState(4);
+  
 
-  const theme = {
+  const [theme, setTheme] = useState({
     action: {
       left_col: {
         type: "text", // text or image
@@ -37,10 +39,14 @@ function Homepage() {
         styling: ""
       },
     },
-  }
+  })
+
+
+
 
   return (
     <>
+
       <div id="top" className='w-full bg-gray-200 '>
         <img src="..\..\custom-files\top.jpg" className='mx-auto'></img>
       </div>
@@ -96,7 +102,7 @@ function Homepage() {
       {/* action */}
       <div id='action' class="grid sm:grid-cols-2 grid-cols-1 w-3/4 place-items-center mx-auto">
         <div id='left' className=''>
-          <p className='text-4xl font-shadows'>{theme.action.left_col.header}</p>
+          <p className='text-4xl font-shadows'>{theme.action.left_col.header}</p><button className='text-4xl' onClick={() => setRepeat(repeat + 1)}>+</button>
           <p>{theme.action.left_col.content}</p>
           <div class="content">
             <div class="arrow">
@@ -121,8 +127,8 @@ function Homepage() {
         </div>
 
         <div id='right' className=''>
-            <p className='text-4xl font-shadows'>{theme.social.left_col.header}</p>
-            <p>{theme.social.left_col.content}</p>
+          <p className='text-4xl font-shadows'>{theme.social.left_col.header}</p>
+          <p>{theme.social.left_col.content}</p>
         </div>
       </div>
 
