@@ -1,0 +1,37 @@
+  .filterbody {
+  display: inline-block;
+  position: fixed;
+  height: 100vh;
+  width: 400px;
+  left: -400px;
+  transition: transform 0.5s;
+  background-color: white;
+  }
+  
+  
+  
+  .filterbody-active .cover {
+  background-color: rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  z-index: 5000;
+  transition: background-color .3s, transform 0.3s;
+  }
+  
+  .filterbody, .hamburger, .cover {
+  transition: transform 0.3s;
+  
+  .filterbody-active & {
+  transform: translateX(400px);
+  }
+  }
+  
+  .noscroll {
+  position: relative;
+  overflow: hidden;
+  }
+  
