@@ -4,7 +4,7 @@ import './filter.css'
 function toggleFilterbody() {
     console.log("toggling")
     document.body.classList.toggle('filterbody-active');
-    document.body.classList.toggle('noscroll');
+    // document.body.classList.toggle('noscroll');
   }
 
 function FilterScreen() {
@@ -18,6 +18,9 @@ function FilterScreen() {
 
             <div>
                 <h1 className='text-3xl'>Filter listings</h1>
+                <button 
+                onClick={toggleFilterbody}
+                className='absolute w-4 h-4 text-4xl right-4'>X</button>
             </div>
 
             <div id="category">
