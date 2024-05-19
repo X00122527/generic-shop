@@ -11,7 +11,7 @@ class ProductImageManager(models.Manager):
         return self.get(order=1)
 
 
-class Item_Type(models.TextChoices):
+class Item_Type_Choices(models.TextChoices):
     TEE = "1", "T-SHIRT",
     HOD = "2", "HOODIE",
     PAN = "3", "PANTALONES",
@@ -25,7 +25,7 @@ class Status_Choices(models.TextChoices):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
-    item_type = models.CharField(max_length=10, choices=Item_Type.choices)
+    item_type = models.CharField(max_length=10, choices=Item_Type_Choices.choices)
     description = models.CharField(max_length=255)
     price = MoneyField(max_digits=5, decimal_places=2, default_currency='USD', default=0)
     status = models.CharField(max_length=10, blank=False, null=False, choices=Status_Choices.choices)
@@ -35,6 +35,10 @@ class Product(models.Model):
     @property
     def get_status(self):
         return Status_Choices(self.status).label
+
+    @property
+    def get_item_type(self):
+        return Item_Type_Choices(self.item_type).label
 
 
 class ProductImage(models.Model):
