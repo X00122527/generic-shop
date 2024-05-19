@@ -3,14 +3,14 @@ import logo from '../../../custom-files/logo.png'
 import AppPaths from '../../lib/appPaths'
 // basic responsive navbar consisting of logo, searchbar and menu 
 
-//using > ttps://flowbite.com/docs/components/navbar/ 
+//using > ttps://flowbite.com/docs/components/navbar/ - while navbar is going to be configurable via admin panel - I think the jsx/html should be re-generated upon update rather than extracting settings from db
 function Navbar() {
   return (
     
 <nav className="bg-white border-gray-200 dark:bg-gray-900">
   <div className="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
   <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
-      <img src={logo} className="w-72 h-28" alt="Flowbite Logo" />
+      <img src={logo} className="h-48" alt="Flowbite Logo" />
       {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Company</span> */}
   </a>
   <div className="flex md:order-2">
