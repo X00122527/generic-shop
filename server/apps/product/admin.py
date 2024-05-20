@@ -25,12 +25,18 @@ class ProductAdmin(admin.ModelAdmin):
     actions = ["make_inactive"]
 
 
-    list_display = ["title", "quantity", "view_description"]  # indicates what is going to be seen in product main list page
+    list_display = ["image_preview", "title", "quantity", "view_description"]  # indicates what is going to be seen in product main list page
 
     # currently not used
     @admin.display(empty_value="???")
     def view_description(self, obj):
         return obj.description[:20]
+
+    @admin.display(empty_value="No image")
+    def image_preview(self, obj):
+        if len(obj.images.all())>0:
+            return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.images.all()[0].image.url))
+
 
     @admin.action(description="Mark selected products are inactive")
     def make_inactive(self, request, queryset):
