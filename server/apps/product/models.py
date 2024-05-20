@@ -26,8 +26,9 @@ class Status_Choices(models.TextChoices):
 class Product(models.Model):
     title = models.CharField(max_length=255)
     item_type = models.CharField(max_length=10, choices=Item_Type_Choices.choices)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, blank=True, null=False)
     price = MoneyField(max_digits=5, decimal_places=2, default_currency='USD', default=0)
+    quantity = models.IntegerField(default=0)
     status = models.CharField(max_length=10, blank=False, null=False, choices=Status_Choices.choices)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
