@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+import notifications.urls
+from django.urls import re_path as pattern
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apps.order.urls')),
+    pattern('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
