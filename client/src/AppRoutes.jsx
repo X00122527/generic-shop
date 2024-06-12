@@ -11,7 +11,8 @@ import Navbar from './components/Navbar/Navbar'
 import AppPaths from "./lib/appPaths";
 import ProductPage from "./components/ProductPage/ProductPage";
 import ProductsPage from "./components/ProductsPage/ProductsPage";
-
+import Signup from "./components/Sign/Signup";
+import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
 
  class AppRoutes extends Component {
   render() {
@@ -23,6 +24,8 @@ import ProductsPage from "./components/ProductsPage/ProductsPage";
           <Route path={AppPaths.HOME} element={<Homepage/>} />
           <Route path={AppPaths.TEMP} element={<ProductPage/>} />
           <Route path={AppPaths.SHOP} element={<ProductsPage/>} />
+          <Route path={AppPaths.LOGIN} element={<Signup/>} />
+          <Route path={AppPaths.CART}  element={<ShoppingCart/>} />
         </Routes>
         <Footer></Footer>
 

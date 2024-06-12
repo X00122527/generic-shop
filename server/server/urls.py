@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apps.order.urls')),
     pattern('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path(r'auth/', include('rest_framework_social_oauth2.urls', namespace='drf')),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

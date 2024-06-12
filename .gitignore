@@ -164,3 +164,6 @@ settings.py
 
 
 custom-files/
+
+*.jpg
+.png

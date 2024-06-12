@@ -86,7 +86,7 @@ function ProductPage() {
 
 
     return (
-        <div className='grid w-full grid-cols-1 mx-auto md:grid-cols-2 lg:w-3/4 sm:w-11/12 gap-x-2'>
+        <div className='container grid w-full grid-cols-1 mx-auto md:grid-cols-2 gap-x-2'>
 
             <div id="carousel" className='col-span-2 md:col-span-1'>
                 <Carousel {...getConfigurableProps()}>
@@ -221,9 +221,8 @@ function ProductPage() {
             <div id="related-items" className='col-span-2 mt-10 '>
                 {/* product card goes here, can introduce also product slider */}
                 <h2>Related products </h2>
-                <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 sm:grid-cols-4 gap-x-4 place-items-center '>
-                    {Array(4).fill(0).map((index) =>
-
+                <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 md:grid-cols-5 gap-x-4 place-items-stretch'>
+                    {Array(5).fill(0).map((index) =>
                         <div id="product">
                             <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-48 md:h-48'></img>
                             <p className='title'>Item name</p>

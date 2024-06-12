@@ -2,3 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+
+.container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+
+@media (min-width: 600px) {
+    .container {
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 728px) {
+    .container {
+        max-width: 728px;
+    }
+}
+
+@media (min-width: 984px) {
+    .container {
+        max-width: 984px;
+    }
+}
+
+@media (min-width: 1240px) {
+    .container {
+        max-width: 1240px;
+    }
+}
+
+@media (min-width: 1496px) {
+    .container {
+        max-width: 1496px;
+    }
+}
+
+
