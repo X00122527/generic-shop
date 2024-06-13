@@ -49,7 +49,7 @@ function ShoppingCart() {
 
                 {/* for each product - display a title, price, selected options (colors,size) and quantity that can be adjusted */}
                 {cartDetailsList.map((cartDetails, index) => (
-                    <div className='flex py-8 gap-x-2 border-b-[1px]'>
+                    <div className='flex py-8 gap-x-2 border-b-[1px]' key={index}>
                         <div id='img'>
                             <img src="https://picsum.photos/seed/picsum/200/200" className=''></img>
                         </div>
