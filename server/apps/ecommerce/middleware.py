@@ -15,6 +15,7 @@ logger = logging.getLogger('django.request')
 class AnonymousSessionMiddleware(object):
     def process_request(self, request):
         # type: (request) -> None
+        print('lallalala')
         if not request.user.is_authenticated() and not request.session.session_key:
             request.session = SessionStore()
             request.session.create()

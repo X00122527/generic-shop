@@ -6,12 +6,15 @@ from djmoney.models.fields import MoneyField
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    cart_id = models.BigAutoField(verbose_name="cart id", primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class CartItems(models.Model):
-    order = models.ForeignKey(Cart, on_delete=models.CASCADE, null=False)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
-    quantity = models.IntegerField(default=1, max_length=2)
+    quantity = models.IntegerField(default=1)
+    option_1 = models.CharField(max_length=100)
+    option_2 = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
