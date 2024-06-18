@@ -41,6 +41,10 @@ function ShoppingCart() {
         }
     }
 
+    const removeItem = () => {
+        
+    }
+
     return (
         <div className='container grid grid-cols-12 gap-x-8 gap-y-4'>
             {/* <h1>Shopping cart</h1> */}

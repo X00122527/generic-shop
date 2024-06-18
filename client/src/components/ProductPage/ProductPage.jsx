@@ -1,23 +1,85 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import 'flowbite'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import ServerUrl from '../../api/serverUrl';
+import ApiEndpoints from '../../api/apiEndpoints';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function ProductPage() {
 
+    const [isLoading, setIsLoading] = useState(true);
+    const [product, setProduct] = useState({
+        title: "",
+        price: "",
+        images: [],
+        brand: "",
+        description: "",
+         "option_1": [], //["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
+         "option_2": [] //["Small", "Medium", "Large", "ExtraLarge"],
+    });
+
+    const [choices, setChoices] = useState({
+        qty: 0,
+        option_1: undefined,
+        option_2: undefined
+    });
+
+    
+    useEffect(() => {
+        fetchProduct();
+    }, [])
+    
+
+    const fetchProduct = () => {
+        
+        const options = {
+            method: 'GET',
+            headers: {
+                Accept: "application/json, text/plain",
+                "Content-Type": "application/json; charset=UTF-8",
+            },
+        };
+
+        const url = ServerUrl.BASE_URL + ApiEndpoints.PRODUCT.replace(":productId", 1);
+
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setProduct(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
     const order = () => {
-        const jsonData = { total: "12",
-                             user: 2 };
+        const jsonData = {
+            total: "12",
+            user: 2
+        };
 
         const options = {
             method: 'POST',
             headers: {
                 Accept: "application/json, text/plain",
                 "Content-Type": "application/json; charset=UTF-8",
-              },
-            body: JSON.stringify(jsonData) 
+            },
+            body: JSON.stringify(jsonData)
         };
 
-        fetch('http://192.168.178.82:8000/api/v1/order', options)
+        fetch(ServerUrl.BASE_URL + ApiEndpoints.ORDER, options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -32,34 +94,103 @@ function ProductPage() {
             });
     };
 
-    const product = {
-        "title": "Product Title",
-        "price": "$100.00",
-        "images": [
-            "https://picsum.photos/400.jpg",
-            "https://picsum.photos/400.jpg",
-            "https://picsum.photos/400.jpg",
-            "https://picsum.photos/400.jpg",
-        ],
-        "brand": "Brand",
-        "options_1": ["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
-        "options_2": ["Small", "Medium", "Large", "ExtraLarge"],
-        "accordion_1": {
+    const addToCart = () => {
+        toast.success('Item to your cart!', {
+            position: "bottom-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+        });
+        console.log("add to cart was executed");
+        // in the backend - since 1 user can only have 1 cart we will just create an entry on init. and keep adding/removing items to cartItems on "addToCart" / "removeFromCart" activity
+        // let url = ServerUrl.BASE_URL + ApiEndpoints.ITEM_CART.replace("<itemId>", 1);
+        let url = ServerUrl.BASE_URL + ApiEndpoints.CART;
+
+        const jsonData = {
+            quantity: 2,
+            product: 1,
+            option_1: "black",
+            option_2: "Large",
+        };
+
+        const options = {
+            method: 'POST',
+            headers: {
+                Accept: "application/json, text/plain",
+                "Content-Type": "application/json; charset=UTF-8",
+            },
+            body: JSON.stringify(jsonData)
+        };
+
+        // console.log('pushing: ', options.body)
+
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    };
+
+    const accordions = {
+        accordion_1: {
             "title": "Description",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
             "expanded": true
         },
-        "accordion_2": {
+        accordion_2: {
             "title": "Product features & Details",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
             "expanded": false
         },
-        "accordion_3": {
+        accordion_3: {
             "title": "Shipping & Returns",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
             "expanded": false
         },
     }
+
+
+    // const product = {
+    //     "title": "Product Title",
+    //     "price": "$100.00",
+    //     "images": [
+    //         "https://picsum.photos/400.jpg",
+    //         "https://picsum.photos/400.jpg",
+    //         "https://picsum.photos/400.jpg",
+    //         "https://picsum.photos/400.jpg",
+    //     ],
+    //     "brand": "Brand",
+    //     "options_1": ["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
+    //     "options_2": ["Small", "Medium", "Large", "ExtraLarge"],
+    //     "accordion_1": {
+    //         "title": "Description",
+    //         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
+    //         "expanded": true
+    //     },
+    //     "accordion_2": {
+    //         "title": "Product features & Details",
+    //         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
+    //         "expanded": false
+    //     },
+    //     "accordion_3": {
+    //         "title": "Shipping & Returns",
+    //         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
+    //         "expanded": false
+    //     },
+    // }
 
     const getConfigurableProps = () => ({
         showArrows: true,
@@ -84,6 +215,16 @@ function ProductPage() {
         // ariaLabel: text('ariaLabel', undefined),
     });
 
+    // const showSwal = () => {
+    //     withReactContent(Swal).fire({
+    //         position: "top-end",
+    //         icon: "success",
+    //         title: "Product has been added to your cart",
+    //         showConfirmButton: false,
+    //         timer: 1000
+    //     });
+    // }
+
 
     return (
         <div className='container grid w-full grid-cols-1 mx-auto md:grid-cols-2 gap-x-2'>
@@ -92,7 +233,8 @@ function ProductPage() {
                 <Carousel {...getConfigurableProps()}>
                     {product.images.map((image, index) => (
                         <div key={index}>
-                            <img src={image} />
+                            <img src={image.image} />
+                            {/* <span>{image}</span> */}
                         </div>
                     ))}
                 </Carousel>
@@ -109,9 +251,9 @@ function ProductPage() {
 
                 {/* options go here */}
                 <div className='my-2'>
-                    <p className='text-sm'>Color: {product.options_1[0]}</p>
+                    <p className='text-sm'>Color: {product.option_1[0]}</p>
                     <div className='inline-flex items-center my-2 gap-x-2'>
-                        {product.options_1.map((color, index) => (
+                        {product.option_1.map((color, index) => (
                             <>
                                 <button className={`h-6 w-6 rounded-lg ${color} focus:h-7 focus:w-7 blur:h-7 blur:w-7`}></button>
                                 {/* <p>{color}</p> */}
@@ -124,7 +266,7 @@ function ProductPage() {
                     {/* <p>Sizes</p> */}
 
                     <div className='inline-flex my-2 gap-x-2'>
-                        {product.options_2.map((size, index) => (
+                        {product.option_2.map((size, index) => (
                             <>
                                 <button className='p-1 mx-auto border-2 focus:border-2 focus:border-black'>{size}</button>
                                 {/* <p>{color}</p> */}
@@ -153,7 +295,9 @@ function ProductPage() {
                         </div>
 
                     </div>
-                    <button type="button" className='w-full px-4 py-2 border-2 border-gray-700 rounded'>Add to cart</button>
+                    <button
+                        onClick={addToCart}
+                        type="button" className='w-full px-4 py-2 border-2 border-gray-700 rounded'>Add to cart</button>
                     <br></br>
                     <br></br>
                     <button onClick={order} type="button" className='w-full px-4 py-2 border-2 border-gray-700 rounded'>Order</button>
@@ -165,8 +309,8 @@ function ProductPage() {
                 {/* Accordion 1 e.g. Product description */}
 
                 <div id="accordion-collapse" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-1" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-1" aria-expanded={product.accordion_1.expanded} aria-controls="accordion-collapse-body-1">
-                        <span className='text-xl font-semibold'>{product.accordion_1.title}</span>
+                    <div id="accordion-collapse-heading-1" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-1" aria-expanded={accordions.accordion_1.expanded} aria-controls="accordion-collapse-body-1">
+                        <span className='text-xl font-semibold'>{accordions.accordion_1.title}</span>
                         <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
                         </svg>
@@ -175,7 +319,7 @@ function ProductPage() {
 
                     <div id="accordion-collapse-body-1" className="hidden" aria-labelledby="accordion-collapse-heading-1">
                         <div className="p-5 ">
-                            <p className="mb-2">{product.accordion_1.text}</p>
+                            <p className="mb-2">{accordions.accordion_1.text}</p>
                         </div>
                     </div>
                 </div>
@@ -183,8 +327,8 @@ function ProductPage() {
                 {/* Accordion 2 e.g.  Product features & Details */}
 
                 <div id="accordion-collapse-2" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-2" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-2" aria-expanded={product.accordion_2.expanded} aria-controls="accordion-collapse-body-2">
-                        <span className='text-xl font-semibold'>{product.accordion_2.title}</span>
+                    <div id="accordion-collapse-heading-2" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-2" aria-expanded={accordions.accordion_2.expanded} aria-controls="accordion-collapse-body-2">
+                        <span className='text-xl font-semibold'>{accordions.accordion_2.title}</span>
                         <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
                         </svg>
@@ -193,7 +337,7 @@ function ProductPage() {
 
                     <div id="accordion-collapse-body-2" className="hidden" aria-labelledby="accordion-collapse-heading-2">
                         <div className="p-5 ">
-                            <p className="mb-2">{product.accordion_2.text}</p>
+                            <p className="mb-2">{accordions.accordion_2.text}</p>
                         </div>
                     </div>
                 </div>
@@ -201,8 +345,8 @@ function ProductPage() {
                 {/* Accordion 3 e.g. Shipping & Returns */}
 
                 <div id="accordion-collapse-3" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-3" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-3" aria-expanded={product.accordion_3.expanded} aria-controls="accordion-collapse-body-3">
-                        <span className='text-xl font-semibold'>{product.accordion_3.title}</span>
+                    <div id="accordion-collapse-heading-3" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-3" aria-expanded={accordions.accordion_3.expanded} aria-controls="accordion-collapse-body-3">
+                        <span className='text-xl font-semibold'>{accordions.accordion_3.title}</span>
                         <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
                         </svg>
@@ -211,7 +355,7 @@ function ProductPage() {
 
                     <div id="accordion-collapse-body-3" className="hidden" aria-labelledby="accordion-collapse-heading-3">
                         <div className="p-5 ">
-                            <p className="mb-2">{product.accordion_3.text}</p>
+                            <p className="mb-2">{accordions.accordion_3.text}</p>
                         </div>
                     </div>
                 </div>
@@ -232,6 +376,8 @@ function ProductPage() {
                     )}
                 </div>
             </div>
+
+            <ToastContainer />
 
         </div>
     )
