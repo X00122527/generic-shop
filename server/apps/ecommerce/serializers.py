@@ -10,9 +10,14 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+	title = serializers.CharField(source='product.title', read_only=True)
+	price = serializers.FloatField(source='product.price.amount', read_only=True)
+	currency = serializers.CharField(source='product.price.currency', read_only=True)
+	image = serializers.ImageField(source='product.images.main_image.image', read_only=True)
 	class Meta:
 		model = CartItems
-		fields = ["quantity", "option_1", "option_2", "product"]
+		fields = ["id", "quantity", "option_1", "option_2", "product", "title", "price", "image", "currency"]
+
 
 	@transaction.atomic
 	def create(self, validated_data):

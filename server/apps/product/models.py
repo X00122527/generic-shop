@@ -42,6 +42,8 @@ class Product(models.Model):
         return Item_Type_Choices(self.item_type).label
 
 
+
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name="images", verbose_name="Product Image",
                                 on_delete=models.CASCADE, null=False, blank=False)
@@ -49,3 +51,16 @@ class ProductImage(models.Model):
     order = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = ProductImageManager()
+
+class ProductOption1(models.Model):
+    product = models.ForeignKey(Product, related_name="option_1", verbose_name="Product Option 1",
+                                on_delete=models.CASCADE, null=False, blank=False)
+    option = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.option
+
+class ProductOption2(models.Model):
+    product = models.ForeignKey(Product, related_name="option_2", verbose_name="Product Option 2",
+                                on_delete=models.CASCADE, null=False, blank=False)
+    option = models.CharField(max_length=100, blank=False, null=False)

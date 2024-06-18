@@ -1147,6 +1147,10 @@ input[type="range"]::-ms-fill-lower {
   height: 100%;
 }
 
+.h-56 {
+  height: 14rem;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -1214,6 +1218,14 @@ input[type="range"]::-ms-fill-lower {
 
 .w-full {
   width: 100%;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.w-56 {
+  width: 14rem;
 }
 
 .max-w-screen-xl {

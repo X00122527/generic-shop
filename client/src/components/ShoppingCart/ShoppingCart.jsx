@@ -95,10 +95,11 @@ function ShoppingCart() {
                 Accept: "application/json, text/plain",
                 "Content-Type": "application/json; charset=UTF-8",
             },
-            body: {"quantity": qty}
+            body: JSON.stringify({"quantity": Number(qty)})
         };
 
         const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId);
+        console.log(options.body);
 
         fetch(url, options)
             .then(response => {
