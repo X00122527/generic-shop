@@ -1,48 +1,129 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import 'flowbite'
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import ServerUrl from '../../api/serverUrl';
+import ApiEndpoints from '../../api/apiEndpoints';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ShoppingCart() {
-    const cartDetailsList = [
-        {
-            title: "Basic T-Shirt",
-            size: 'Large',
-            color: 'Black',
-            price: "$11.11",
-            qty: "2"
-        },
-        {
-            title: "Oversized T-Shirt",
-            size: 'Large',
-            color: 'Black',
-            price: "$11.11",
-            qty: "2"
-        },
-        {
-            title: "Hoodie",
-            size: 'Small',
-            color: 'White',
-            price: "$33.00",
-            qty: "1"
-        }
 
-    ]
+    const [cartDetailsList, setCartDetailsList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // const cartDetailsList = [
+    //     {
+    //         title: "Basic T-Shirt",
+    //         size: 'Large',
+    //         color: 'Black',
+    //         price: "$11.11",
+    //         qty: "2"
+    //     },
+    //     {
+    //         title: "Oversized T-Shirt",
+    //         size: 'Large',
+    //         color: 'Black',
+    //         price: "$11.11",
+    //         qty: "2"
+    //     },
+    //     {
+    //         title: "Hoodie",
+    //         size: 'Small',
+    //         color: 'White',
+    //         price: "$33.00",
+    //         qty: "1"
+    //     }
+    // ]
 
     const getShipping = () => {
-        return "FREE";
+        return 10.50;
+    }
+
+    useEffect(() => {
+        fetchCartItems();
+    }, [])
+
+    const fetchCartItems = () => {
+
+        const options = {
+            method: 'GET',
+            headers: {
+                Accept: "application/json, text/plain",
+                "Content-Type": "application/json; charset=UTF-8",
+            },
+        };
+
+        const url = ServerUrl.BASE_URL + ApiEndpoints.CART;
+
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setCartDetailsList(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
     }
 
     const calculateCart = () => {
         //loop through cartDetails
-        let subtotal = 22.22;
-        let total = 22.22;
+        let subtotal = 0;  // qty * price
+        let total = 0;     // subtotal + shipping + taxes?
+        for (let i = 0; i < cartDetailsList.length; i++) {
+            subtotal += cartDetailsList[i].price * cartDetailsList[i].quantity;
+        }
+        console.log(subtotal);
         return {
             subtotal: subtotal,
             shipping: getShipping(),
-            total: total,
+            total: subtotal + getShipping(),
         }
     }
 
-    const removeItem = () => {
-        
+
+    const updateItem = (qty, itemId) => {
+        console.log(qty, itemId);
+        const options = {
+            method: 'PATCH',
+            headers: {
+                Accept: "application/json, text/plain",
+                "Content-Type": "application/json; charset=UTF-8",
+            },
+            body: {"quantity": qty}
+        };
+
+        const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId);
+
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setCartDetailsList(data); // this has to insert it back into specific place
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    const deleteItem = (itemId) => {
+
+    }
+
+    const removeItem = (index, itemId) => {
+        setCartDetailsList(cartDetailsList.filter((cart, i) => i !== index))
+        deleteItem(itemId);
+        calculateCart();
     }
 
     return (
@@ -55,15 +136,18 @@ function ShoppingCart() {
                 {cartDetailsList.map((cartDetails, index) => (
                     <div className='flex py-8 gap-x-2 border-b-[1px]' key={index}>
                         <div id='img'>
-                            <img src="https://picsum.photos/seed/picsum/200/200" className=''></img>
+                            <img src={cartDetails.image} className='w-56 h-56'></img>
                         </div>
                         <div id='details' className='relative grow'>
                             <span className='font-mono font-semibold'>{cartDetails.title}</span>
-                            <span className='absolute top-0 right-0'>X</span>
-                            <p className='text-gray-600'>{cartDetails.color} | {cartDetails.size}</p>
+                            <span
+                                onClick={(e) => removeItem(index, itemId)}
+                                className='absolute top-0 right-0'>X</span>
+                            <p className='text-gray-600'>{cartDetails.option_1} | {cartDetails.option_2}</p>
                             <p className='font-serif text-black'>{cartDetails.price}</p>
                             <select id="qty"
-                                defaultValue={cartDetails.qty}
+                                defaultValue={cartDetails.quantity}
+                                onChange={e => updateItem(e.target.value, cartDetails.id)}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-16">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -99,6 +183,8 @@ function ShoppingCart() {
             </div>
         </div>
     )
+
 }
+
 
 export default ShoppingCart
