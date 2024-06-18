@@ -3,6 +3,7 @@ import 'flowbite'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import ServerUrl from '../../api/serverUrl';
 import ApiEndpoints from '../../api/apiEndpoints';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ShoppingCart() {
@@ -88,7 +89,6 @@ function ShoppingCart() {
 
 
     const updateItem = (qty, itemId) => {
-        console.log(qty, itemId);
         const options = {
             method: 'PATCH',
             headers: {
@@ -110,7 +110,18 @@ function ShoppingCart() {
             })
             .then(data => {
                 console.log(data);
-                setCartDetailsList(data); // this has to insert it back into specific place
+                setCartDetailsList([data]); // this has to insert it back into specific place
+                toast.success('Cart was updated.', {
+                    position: "bottom-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    // transition: Bounce,
+                });
             })
             .catch(error => {
                 console.error('Fetch error:', error);
@@ -118,7 +129,42 @@ function ShoppingCart() {
     }
 
     const deleteItem = (itemId) => {
+        const options = {
+            method: 'DELETE',
+            headers: {
+                Accept: "application/json, text/plain",
+                "Content-Type": "application/json; charset=UTF-8",
+            },
+        };
 
+        const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId);
+        console.log(options.body);
+
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                toast.success('Item was removed from your cart', {
+                    position: "bottom-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    // transition: Bounce,
+                });
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                toast.error('Something went wrong.')
+            });
     }
 
     const removeItem = (index, itemId) => {
@@ -142,7 +188,7 @@ function ShoppingCart() {
                         <div id='details' className='relative grow'>
                             <span className='font-mono font-semibold'>{cartDetails.title}</span>
                             <span
-                                onClick={(e) => removeItem(index, itemId)}
+                                onClick={(e) => removeItem(index, cartDetails.id)}
                                 className='absolute top-0 right-0'>X</span>
                             <p className='text-gray-600'>{cartDetails.option_1} | {cartDetails.option_2}</p>
                             <p className='font-serif text-black'>{cartDetails.price}</p>
@@ -182,6 +228,7 @@ function ShoppingCart() {
                 <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm w-full py-2.5 text-center me-2 mb-2">
                     Checkout</button>
             </div>
+            <ToastContainer />
         </div>
     )
 
