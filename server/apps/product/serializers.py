@@ -33,7 +33,7 @@ class ProductSerializer(serializers.ModelSerializer):
 				  'status', 'images', 'option_1', 'option_2')
 
 	def get_option_1(self, product):
-		return product.option_1.values_list('option', flat=True)
+		return list(set(product.option_1.values_list('option_1', flat=True)))
 
 	def get_option_2(self, product):
-		return product.option_2.values_list('option', flat=True)
+		return list(set(product.option_1.values_list('option_2', flat=True)))

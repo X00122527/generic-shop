@@ -2,6 +2,12 @@ from django.db import models
 from djmoney.models.fields import MoneyField
 
 
+def upload_to_option_folder(instance, file_name):
+    return '/'.join(['option_1', str(instance.option_1), file_name])
+
+def upload_to_option2_folder(instance, file_name):
+    return '/'.join(['option_2', str(instance.option_2), file_name])
+
 def upload_to_product_folder(instance, file_name):
     return '/'.join(['product', str(instance.product.id), file_name])
 
@@ -55,10 +61,14 @@ class ProductImage(models.Model):
 class ProductOption1(models.Model):
     product = models.ForeignKey(Product, related_name="option_1", verbose_name="Product Option 1",
                                 on_delete=models.CASCADE, null=False, blank=False)
-    option = models.CharField(max_length=100, blank=False, null=False)
+    option_1_thumbnail =  models.ImageField(upload_to=upload_to_option_folder, null=False, blank=True)
+    option_1 = models.CharField(max_length=100, blank=False, null=False)
+    option_2_thumbnail =  models.ImageField(upload_to=upload_to_option2_folder, null=False, blank=True)
+    option_2 = models.CharField(max_length=100, blank=False, null=False)
+    quantity = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.option
+    # def __str__(self):
+    #     return self.option
 
 class ProductOption2(models.Model):
     product = models.ForeignKey(Product, related_name="option_2", verbose_name="Product Option 2",

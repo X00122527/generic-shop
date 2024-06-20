@@ -9,6 +9,7 @@ from notifications.signals import notify
 from apps.user.models import User
 from rest_framework.generics import ListAPIView
 from apps.product.models import Status_Choices
+from rest_framework.permissions import AllowAny,  IsAuthenticated
 
 class ProductView(APIView):
 
@@ -22,3 +23,5 @@ class ProductsView(ListAPIView):
 
     queryset = Product.objects.filter(status=1)  # can we make use of Status_Choices ?
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+

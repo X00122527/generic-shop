@@ -1,7 +1,23 @@
 from django.contrib import admin, messages
-from .models import Product, ProductImage, Status_Choices
+from .models import Product, ProductImage, Status_Choices, ProductOption1
 from django.utils.html import format_html
 from django.utils.translation import ngettext
+
+class ProductOptionInline(admin.TabularInline):
+    model = ProductOption1
+    fields = ["option_1_thumbnail_preview", "option_1_thumbnail", "option_1", "option_2_thumbnail_preview", "option_2_thumbnail", "option_2", "quantity"]
+    readonly_fields = ('option_1_thumbnail_preview', 'option_2_thumbnail_preview')
+
+
+    def option_1_thumbnail_preview(self, instance: ProductOption1):
+        if instance.image:
+            return format_html('<img src="{}" style="max-width:50px; max-height:50px"/>'.format(instance.option_1_thumbnail.url))
+        return "-"
+
+    def option_2_thumbnail_preview(self, instance: ProductOption1):
+        if instance.image:
+            return format_html('<img src="{}" style="max-width:50px; max-height:50px"/>'.format(instance.option_2_thumbnail.url))
+        return "-"
 
 
 class ProductImageInline(admin.TabularInline):
@@ -21,6 +37,7 @@ class ProductImageInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     inlines = [
         ProductImageInline,
+        ProductOptionInline
     ]
     actions = ["make_inactive"]
 
