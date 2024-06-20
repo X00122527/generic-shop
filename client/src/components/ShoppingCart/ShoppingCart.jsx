@@ -5,6 +5,8 @@ import ServerUrl from '../../api/serverUrl';
 import ApiEndpoints from '../../api/apiEndpoints';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
+import AppPaths from '../../lib/appPaths';
 
 function ShoppingCart() {
 
@@ -186,10 +188,15 @@ function ShoppingCart() {
                 {cartDetailsList.map((cartDetails, index) => (
                     <div className='flex py-8 gap-x-2 border-b-[1px]' key={index}>
                         <div id='img'>
+                    <Link to={"/" + AppPaths.PRODUCT.replace(':productId', cartDetails.product)}>
+
                             <img src={cartDetails.image} className='w-56 h-56'></img>
+                    </Link>
+
                         </div>
                         <div id='details' className='relative grow'>
                             <span className='font-mono font-semibold'>{cartDetails.title}</span>
+
                             <span
                                 onClick={(e) => removeItem(index, cartDetails.id)}
                                 className='absolute top-0 right-0'>X</span>
