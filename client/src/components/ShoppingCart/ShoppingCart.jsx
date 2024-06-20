@@ -36,12 +36,15 @@ function ShoppingCart() {
     // ]
 
     const getShipping = () => {
-        return 10.50;
+        if (cartDetailsList.length > 0) {
+            return 10.50;
+        }
+        return 0;
     }
 
     useEffect(() => {
         fetchCartItems();
-    }, [])
+    }, []);
 
     const fetchCartItems = () => {
 
@@ -95,7 +98,7 @@ function ShoppingCart() {
                 Accept: "application/json, text/plain",
                 "Content-Type": "application/json; charset=UTF-8",
             },
-            body: JSON.stringify({"quantity": Number(qty)})
+            body: JSON.stringify({ "quantity": Number(qty) })
         };
 
         const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId);
@@ -192,16 +195,34 @@ function ShoppingCart() {
                                 className='absolute top-0 right-0'>X</span>
                             <p className='text-gray-600'>{cartDetails.option_1} | {cartDetails.option_2}</p>
                             <p className='font-serif text-black'>{cartDetails.price}</p>
-                            <select id="qty"
-                                defaultValue={cartDetails.quantity}
-                                onChange={e => updateItem(e.target.value, cartDetails.id)}
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-16">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                {/* make it adjustable as per cardDetails - reactHookforms? */}
-                            </select>
+
+                            <div className='absolute bottom-0 my-4'>
+                                <div className="relative flex items-center ">
+                                    <button 
+                                    onClick={e => updateItem(cartDetails.quantity-1, cartDetails.id)}
+                                    type="button" id="decrement-button" data-input-counter-decrement="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-s-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16" />
+                                        </svg>
+                                    </button>
+                                    <input 
+                                    defaultValue={cartDetails.quantity}
+                                    value={cartDetails.quantity}
+                                    onChange={e => updateItem(e.target.value, cartDetails.id)}
+
+                                    type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-12 py-2.5 " placeholder="1" required />
+                                    <button 
+                                    onClick={e => updateItem(cartDetails.quantity+1, cartDetails.id)}
+                                    type="button" id="increment-button" data-input-counter-increment="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-e-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                            </div>
+
+ 
                         </div>
                     </div>
                 ))}
