@@ -23,7 +23,7 @@ import Signup from "./components/Sign/Signup";
 
       <Routes>
           <Route path={AppPaths.HOME} element={<Homepage/>} />
-          <Route path={AppPaths.TEMP} element={<ProductPage/>} />
+          <Route path={AppPaths.PRODUCT} exact element={<ProductPage/>} />
           <Route path={AppPaths.SHOP} element={<ProductsPage/>} />
           <Route path={AppPaths.LOGIN} element={<Login/>} />
           <Route path={AppPaths.SIGN_UP} element={<Signup/>} />

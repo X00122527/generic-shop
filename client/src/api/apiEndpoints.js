@@ -6,6 +6,7 @@ const ApiEndpoints = {
   // ITEM_CART: "api/v1/carts/item/<itemId>", // POST, DELETE, PATCH
   // DELETE_CART_ITEM: "api/v1/cart/delete/{itemId}",
   UPDATE_CART_ITEM: "api/v1/carts/items/:itemId",
+  LOGIN: "api/v1/login"
 
 
 };
