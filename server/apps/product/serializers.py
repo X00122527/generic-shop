@@ -8,6 +8,12 @@ class ProductOption1Serializer(serializers.ModelSerializer):
 		fields = ['option']
 
 
+class StockSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ProductOption1
+		fields = "__all__"
+
+
 class ProductOption2Serializer(serializers.ModelSerializer):
 	class Meta:
 		model = ProductOption2
@@ -21,6 +27,26 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+	images = ProductImageSerializer(many=True, read_only=True)
+	option_1 = serializers.SerializerMethodField()
+	option_2 = serializers.SerializerMethodField()
+	stock_option = StockSerializer(many=True, read_only=True, source='option_1')
+
+	# option_2 = ProductOption2Serializer(many=True, read_only=True).data
+
+	class Meta:
+		model = Product
+		fields = ('id', 'title', 'item_type', 'description', 'created_on', 'price_currency', 'price', 'quantity',
+				  'status', 'images', 'option_1', 'option_2', 'stock_option')
+
+	def get_option_1(self, product):
+		return list(set(product.option_1.values_list('option_1', flat=True)))
+
+	def get_option_2(self, product):
+		return list(set(product.option_1.values_list('option_2', flat=True)))
+
+
+class ProductsSerializer(serializers.ModelSerializer):
 	images = ProductImageSerializer(many=True, read_only=True)
 	option_1 = serializers.SerializerMethodField()
 	option_2 = serializers.SerializerMethodField()

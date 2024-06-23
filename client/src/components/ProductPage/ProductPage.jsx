@@ -9,6 +9,8 @@ import withReactContent from 'sweetalert2-react-content'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from "react-router-dom";
+import Accordion from '../Accordion/Accordion';
+import RelatedProducts from './RelatedProducts';
 
 const displayMode = {
     option_1: "list", // or list
@@ -24,14 +26,16 @@ function ProductPage(props) {
         images: [],
         // brand: "",
         description: "",
+        qty: "0",
         option_1: [], //["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
-        option_2: [] //["Small", "Medium", "Large", "ExtraLarge"],
+        option_2: [], //["Small", "Medium", "Large", "ExtraLarge"],
+        stock_option: []
     });
     let param = useParams();
 
 
     const [choices, setChoices] = useState({
-        qty: 0,
+        qty: 1,
         option_1: product.option_1[0], // bug here -- to fix initial value, undefined,
         option_2: undefined
     });
@@ -40,9 +44,9 @@ function ProductPage(props) {
         fetchProduct();
     }, [])
 
-    useEffect(() => {
-        
-    }, [product])
+    // useEffect(() => {
+    //     setProduct({...product, qty: calculateQty()})
+    // }, [choices.qty])
 
 
     const fetchProduct = () => {
@@ -104,17 +108,7 @@ function ProductPage(props) {
     };
 
     const addToCart = () => {
-        toast.success('Item to your cart!', {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
-            // transition: Bounce,
-        });
+ 
         console.log("add to cart was executed");
         // in the backend - since 1 user can only have 1 cart we will just create an entry on init. and keep adding/removing items to cartItems on "addToCart" / "removeFromCart" activity
         // let url = ServerUrl.BASE_URL + ApiEndpoints.ITEM_CART.replace("<itemId>", 1);
@@ -127,7 +121,7 @@ function ProductPage(props) {
             option_2: choices.option_2,
         };
 
-        console.log('data being pushed: ',jsonData);
+        console.log('data being pushed: ', jsonData);
 
         const options = {
             method: 'POST',
@@ -149,9 +143,21 @@ function ProductPage(props) {
             })
             .then(data => {
                 console.log(data);
+                toast.success('Item was added to your cart!', {
+                    position: "bottom-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    // transition: Bounce,
+                });
             })
             .catch(error => {
                 console.error('Fetch error:', error);
+                toast.error('Please select valid option')
             });
     };
 
@@ -244,7 +250,15 @@ function ProductPage(props) {
     }
 
     const calculateQty = () => {
-        return "1";
+        let stock = product.stock_option;
+
+
+        for (let i = 0; i < stock.length; i++) {
+            if (stock[i].option_1 === choices.option_1 & stock[i].option_2 === choices.option_2) {
+                console.log(stock[i].quantity);
+                return stock[i].quantity;
+            }
+        }
     }
 
     if (isLoading) {
@@ -279,31 +293,33 @@ function ProductPage(props) {
                     {/* below is probably only needed when thumbnails are in use with no text? */}
                     <p className='text-sm'>Color: {getOption_1Text()}</p>
                     <div className='inline-flex items-center my-2 gap-x-2'>
-                        {displayMode.option_1 == "tile" &&
-                            product.option_1.map((option, index) => (
-                                <>
-                                    {/* this could work if I stick with tailwind color classes */}
-                                    {/* <button
+                        {/* this could work if I stick with tailwind color classes */}
+                        {/* <button
                                 onClick={()=>setChoices({...choices, option_1: option})}
                                 className={`h-6 w-6 rounded-lg ${option} focus:h-7 focus:w-7 blur:h-7 blur:w-7`}></button> */}
-                                    <button
-                                        onClick={() => setChoices({ ...choices, option_1: option })}
-                                        className={`p-1 mx-auto border-2`}>{option}</button>
-                                </>
+
+                        {displayMode.option_1 == "tile" &&
+                            product.option_1.map((option, index) => (
+
+                                <button key={index}
+                                    onClick={() => setChoices({ ...choices, option_1: option })}
+                                    className={`p-1 mx-auto border-2`}>{option}
+                                </button>
                             ))}
 
                         {displayMode.option_1 == "list" &&
                             <>
                                 {/* <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label> */}
                                 <select
+
                                     defaultValue={getOption_1Text}
                                     onChange={(e) => setChoices({ ...choices, option_1: e.target.value })}
-                                    id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     {/* <option selected>Choose an option</option> */}
                                     {product.option_1.map((option, index) => (
-                                        <>
-                                            <option value={option}>{option}</option>
-                                        </>
+                                        <option
+                                            key={index}
+                                            value={option}>{option}</option>
                                     ))}
                                 </select>
                             </>
@@ -317,20 +333,18 @@ function ProductPage(props) {
 
                     <div className='inline-flex my-2 gap-x-2'>
                         {product.option_2.map((option, index) => (
-                            <>
-                            {/* <p>{option} - {choices.option_2}</p> */}
-                                <button
-                                    onClick={() => setChoices({ ...choices, option_2: option })}
-                                    className={'p-1 mx-auto border-2 ' + (option==choices.option_2 ? 'border-black' : '')}>{option}</button> 
-                                
-                            </>
+                            <button
+                                key={index}
+                                onClick={() => setChoices({ ...choices, option_2: option })}
+                                className={'p-1 mx-auto border-2 ' + (option == choices.option_2 ? 'border-black' : '')}>{option}</button>
+
                         ))}
                     </div>
                 </div>
 
                 {/* quantity for that specific item for option_1 and option_2 */}
                 <div className='pb-2'>
-                    <span>In stock: {calculateQty()}</span>
+                    <span>In stock: {product.quantity}</span>
                 </div>
 
                 {/* call to action */}
@@ -373,74 +387,28 @@ function ProductPage(props) {
 
                 {/* Accordion 1 e.g. Product description */}
 
-                <div id="accordion-collapse" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-1" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-1" aria-expanded={accordions.accordion_1.expanded} aria-controls="accordion-collapse-body-1">
-                        <span className='text-xl font-semibold'>{accordions.accordion_1.title}</span>
-                        <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
-                        </svg>
+                <Accordion
+                    title={accordions.accordion_1.title}
+                    text={accordions.accordion_1.text}
+                    isOpen={true}
+                ></Accordion>
 
-                    </div>
+                <Accordion
+                    title={accordions.accordion_2.title}
+                    text={accordions.accordion_2.text}
+                    isOpen={false}
+                ></Accordion>
 
-                    <div id="accordion-collapse-body-1" className="hidden" aria-labelledby="accordion-collapse-heading-1">
-                        <div className="p-5 ">
-                            <p className="mb-2">{accordions.accordion_1.text}</p>
-                        </div>
-                    </div>
-                </div>
+                <Accordion
+                    title={accordions.accordion_3.title}
+                    text={accordions.accordion_3.text}
+                    isOpen={false}
+                ></Accordion>
 
-                {/* Accordion 2 e.g.  Product features & Details */}
-
-                <div id="accordion-collapse-2" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-2" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-2" aria-expanded={accordions.accordion_2.expanded} aria-controls="accordion-collapse-body-2">
-                        <span className='text-xl font-semibold'>{accordions.accordion_2.title}</span>
-                        <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
-                        </svg>
-
-                    </div>
-
-                    <div id="accordion-collapse-body-2" className="hidden" aria-labelledby="accordion-collapse-heading-2">
-                        <div className="p-5 ">
-                            <p className="mb-2">{accordions.accordion_2.text}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Accordion 3 e.g. Shipping & Returns */}
-
-                <div id="accordion-collapse-3" data-accordion="collapse" className='my-4'>
-                    <div id="accordion-collapse-heading-3" className="relative inline-flex items-center w-full" data-accordion-target="#accordion-collapse-body-3" aria-expanded={accordions.accordion_3.expanded} aria-controls="accordion-collapse-body-3">
-                        <span className='text-xl font-semibold'>{accordions.accordion_3.title}</span>
-                        <svg data-accordion-icon className="absolute right-0 w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
-                        </svg>
-
-                    </div>
-
-                    <div id="accordion-collapse-body-3" className="hidden" aria-labelledby="accordion-collapse-heading-3">
-                        <div className="p-5 ">
-                            <p className="mb-2">{accordions.accordion_3.text}</p>
-                        </div>
-                    </div>
-                </div>
 
             </div>
 
-            <div id="related-items" className='col-span-2 mt-10 '>
-                {/* product card goes here, can introduce also product slider */}
-                <h2>Related products </h2>
-                <div id='products' className='grid w-full grid-cols-2 mx-auto mt-2 gap-y-2 md:grid-cols-5 gap-x-4 place-items-stretch'>
-                    {Array(5).fill(0).map((index) =>
-                        <div id="product">
-                            <img src="https://picsum.photos/seed/picsum/200/300" className='w-40 h-40 md:w-48 md:h-48'></img>
-                            <p className='title'>Item name</p>
-                            <div className='under_lines'></div>
-                            <h3 className='price'>$ 12.22 </h3>
-                        </div>
-                    )}
-                </div>
-            </div>
+            <RelatedProducts keyword={""} numberOfTiles={0}></RelatedProducts>
 
             <ToastContainer />
 

@@ -60,14 +60,14 @@ function ProductsPage(props) {
                 <div id="related-items" className='col-span-2 mt-10 '>
                     {/* product card goes here, can introduce also product slider */}
                     <h2>Related products </h2>
-                    <div id='products' className='grid w-full grid-cols-2 gap-4 mx-auto mt-2 sm:grid-cols-4 place-items-center '>
+                    <div id='products' className='grid w-full grid-cols-2 gap-4 mx-auto mt-2 sm:grid-cols-4 '>
                         {productList.map((product, index) => 
-                            <Link to={"/" + AppPaths.PRODUCT.replace(':productId', product.id)}>
-                            <div id="product" className='text-center'>
-                                <img src={product.images[0].image} className='w-40 h-40 md:w-48 md:h-48'></img>
+                            <Link to={"/" + AppPaths.PRODUCT.replace(':productId', product.id)} key={index}>
+                            <div id="product" className='text-center' >
+                                <img src={product.images[0].image} className='w-full'></img>
                                 {/* <span>{product.images[0]}</span> */}
-                                <p className='text-lg font-shadows'>{product.title}</p>
-                                <p className='price'>{product.price}</p>
+                                <p className='text-md font-shadows'>{product.title}</p>
+                                <p className='price'>{product.currency} {product.price}</p>
                             </div>
                             </Link>
                         )}
