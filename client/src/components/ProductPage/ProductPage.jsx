@@ -108,7 +108,7 @@ function ProductPage(props) {
     };
 
     const addToCart = () => {
- 
+
         console.log("add to cart was executed");
         // in the backend - since 1 user can only have 1 cart we will just create an entry on init. and keep adding/removing items to cartItems on "addToCart" / "removeFromCart" activity
         // let url = ServerUrl.BASE_URL + ApiEndpoints.ITEM_CART.replace("<itemId>", 1);
@@ -180,34 +180,6 @@ function ProductPage(props) {
     }
 
 
-    // const product = {
-    //     "title": "Product Title",
-    //     "price": "$100.00",
-    //     "images": [
-    //         "https://picsum.photos/400.jpg",
-    //         "https://picsum.photos/400.jpg",
-    //         "https://picsum.photos/400.jpg",
-    //         "https://picsum.photos/400.jpg",
-    //     ],
-    //     "brand": "Brand",
-    //     "options_1": ["bg-black", "bg-yellow-500", "bg-red-500", "bg-blue-500"],
-    //     "options_2": ["Small", "Medium", "Large", "ExtraLarge"],
-    //     "accordion_1": {
-    //         "title": "Description",
-    //         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
-    //         "expanded": true
-    //     },
-    //     "accordion_2": {
-    //         "title": "Product features & Details",
-    //         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
-    //         "expanded": false
-    //     },
-    //     "accordion_3": {
-    //         "title": "Shipping & Returns",
-    //         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis justo iaculis, semper sem at, posuere sem. Duis eu sem vel mauris auctor consectetur eget eget orci. Mauris pharetra lorem non dolor pharetra venenatis.",
-    //         "expanded": false
-    //     },
-    // }
 
     const getConfigurableProps = () => ({
         showArrows: true,
@@ -247,6 +219,13 @@ function ProductPage(props) {
             return choices.option_1
         }
         return product.option_1[0];
+    }
+
+    const getOption_2Text = () => {
+        if (choices.option_2) {
+            return choices.option_2
+        }
+        return product.option_2[0];
     }
 
     const calculateQty = () => {
@@ -332,13 +311,34 @@ function ProductPage(props) {
                     {/* <p>Sizes</p> */}
 
                     <div className='inline-flex my-2 gap-x-2'>
-                        {product.option_2.map((option, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setChoices({ ...choices, option_2: option })}
-                                className={'p-1 mx-auto border-2 ' + (option == choices.option_2 ? 'border-black' : '')}>{option}</button>
+                        {displayMode.option_2 == "tile" &&
 
-                        ))}
+                            product.option_2.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setChoices({ ...choices, option_2: option })}
+                                    className={'p-1 mx-auto border-2 ' + (option == choices.option_2 ? 'border-black' : '')}>{option}</button>
+
+                            ))}
+
+                        {displayMode.option_2 == "list" &&
+                            <>
+                                {/* <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label> */}
+                                <select
+
+                                    defaultValue={getOption_2Text}
+                                    onChange={(e) => setChoices({ ...choices, option_2: e.target.value })}
+                                    id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    {/* <option selected>Choose an option</option> */}
+                                    {product.option_2.map((option, index) => (
+                                        <option
+                                            key={index}
+                                            value={option}>{option}</option>
+                                    ))}
+                                </select>
+                            </>
+                        }
+
                     </div>
                 </div>
 
