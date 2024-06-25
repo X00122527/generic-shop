@@ -167,3 +167,5 @@ custom-files/
 
 *.jpg
 .png
+
+server/crawler/*

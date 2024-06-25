@@ -21,18 +21,45 @@ const Signup = ({ history }) => {
   const onSubmit = async (signupData) => {
     console.log(signupData);
     const formData = new FormData();
-    formData.append("image", signupData.image[0]);
-    delete signupData["image"];
     Object.keys(signupData).forEach((key) => {
       formData.append(key, signupData[key]);
     });
-    const successSignupData = await ApiConnector.sendPostRequest(
-      ApiEndpoints.SIGN_UP_URL,
-      formData,
-      false,
-      true
-    );
-    if (successSignupData) {
+    let successLoginData;
+    let url = ServerUrl.BASE_URL + ApiEndpoints.SIGNUP;
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: "application/json, text/plain",
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      body: JSON.stringify(formData)
+    }
+
+    fetch(url, options)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        successLoginData = data;
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+      });
+
+    if (successLoginData) {
+      Object.keys(successLoginData).forEach((key) => {
+        CookieUtil.setCookie(key, successLoginData[key]);
+      });
+      window.location.href = AppPaths.HOME;
+    }
+
+
+    if (successLoginData) {
       history.push({
         pathname: AppPaths.LOGIN,
         state: { redirectFrom: AppPaths.SIGN_UP },
