@@ -23,7 +23,7 @@ function RelatedProducts({ numberOfTiles, keyword }) {
                 "Content-Type": "application/json; charset=UTF-8",
             },
         };
-        const url = ServerUrl.BASE_URL + ApiEndpoints.PRODUCTS;
+        const url = ServerUrl.BASE_URL + ApiEndpoints.PRODUCTS + "?limit=4&offset=0";
 
         fetch(url, options)
             .then(response => {
@@ -34,7 +34,7 @@ function RelatedProducts({ numberOfTiles, keyword }) {
             })
             .then(data => {
                 console.log(data);
-                setProductList(data);
+                setProductList(data.results);
             })
             .catch(error => {
                 console.error('Fetch error:', error);

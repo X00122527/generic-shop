@@ -245,7 +245,7 @@ function ProductPage(props) {
     }
 
     return (
-        <div className='container grid w-full grid-cols-1 mx-auto md:grid-cols-2 gap-x-2'>
+        <div className='grid w-full grid-cols-1 px-1 mx-auto md:px-10 lg:px-24 md:grid-cols-2 gap-x-2'>
 
             <div id="carousel" className='col-span-2 md:col-span-1'>
                 <Carousel {...getConfigurableProps()}>

@@ -40,7 +40,7 @@ function ProductsPage(props) {
             })
             .then(data => {
                 console.log(data);
-                setProductList(data);
+                setProductList(data.results);
                 setIsLoading(false);
             })
             .catch(error => {
