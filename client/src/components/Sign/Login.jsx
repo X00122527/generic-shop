@@ -5,14 +5,19 @@ import AppPaths from "../../lib/appPaths";
 import CookieUtil from "../../util/cookieUtil";
 import ServerUrl from "../../api/serverUrl";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import GoogleSSO from "./GoogleSSO";
 
 function Login({ location }) {
+
+
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
 
   const onSubmit = async (loginData) => {
 
@@ -104,11 +109,17 @@ function Login({ location }) {
             Login
           </button>
         </form>
+
         <p id="authFormFooter">
           Don't have any account! <Link to="/signup">Click here</Link> to
           singup.
         </p>
       </div>
+      
+
+
+
+<GoogleSSO></GoogleSSO>
 
     </div>
   )

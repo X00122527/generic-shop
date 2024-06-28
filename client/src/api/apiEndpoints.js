@@ -7,7 +7,8 @@ const ApiEndpoints = {
   // DELETE_CART_ITEM: "api/v1/cart/delete/{itemId}",
   UPDATE_CART_ITEM: "api/v1/carts/items/:itemId",
   LOGIN: "api/v1/login",
-  SIGNUP: "api/v1/signup"
+  SIGNUP: "api/v1/signup",
+  GOOGLE_AUTH: "api/v1/auth-receiver"
 
 
 
