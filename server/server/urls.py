@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/v1/', include('apps.ecommerce.urls')),
     path('api/v1/', include('apps.product.urls')),
     path('api/v1/', include('apps.user.urls')),
+    path('api/v1/', include('apps.sim.urls')),
     pattern('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
     path(r'auth/', include('rest_framework_social_oauth2.urls', namespace='drf')),
 
