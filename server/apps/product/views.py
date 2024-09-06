@@ -11,6 +11,8 @@ from rest_framework.generics import ListAPIView
 from apps.product.models import Status_Choices
 from rest_framework.permissions import AllowAny,  IsAuthenticated
 from rest_framework.pagination import PageNumberPagination,BasePagination,LimitOffsetPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import ProductFilter
 
 class MyCustomPagination(LimitOffsetPagination):
     default_limit = 20
@@ -30,6 +32,8 @@ class ProductsView(ListAPIView):
 
     queryset = Product.objects.filter(status=1)  # can we make use of Status_Choices ?
     serializer_class = ProductsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
     permission_classes = [AllowAny]
     pagination_class = MyCustomPagination
 
