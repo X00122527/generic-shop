@@ -7,19 +7,22 @@ import withReactContent from 'sweetalert2-react-content'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FilterSortBody from './FilterSortBody'
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import AppPaths from '../../lib/appPaths';
 
 function ProductsPage(props) {
     //20 products per page with pagination and left side bar
     const [productList, setProductList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchParams] = useSearchParams();
+    const filter = searchParams.toString();
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [searchParams]);
 
     const fetchProducts = () => {
+        console.log("fetching products...",filter);
         
         const options = {
             method: 'GET',
@@ -29,7 +32,7 @@ function ProductsPage(props) {
             },
         };
 
-        const url = ServerUrl.BASE_URL + ApiEndpoints.PRODUCTS;
+        const url = ServerUrl.BASE_URL + ApiEndpoints.PRODUCTS + "?"+filter;
 
         fetch(url, options)
             .then(response => {
@@ -39,7 +42,6 @@ function ProductsPage(props) {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setProductList(data.results);
                 setIsLoading(false);
             })
@@ -54,13 +56,17 @@ function ProductsPage(props) {
 
     return (
         <>
-            <div className='w-2/3 mx-auto'>
+            <div className='px-1 mx-auto md:px-10 lg:px-24'>
 
                 <FilterSortBody {...props}></FilterSortBody>
                 <div id="related-items" className='col-span-2 mt-10 '>
                     {/* product card goes here, can introduce also product slider */}
-                    <h2>Related products </h2>
-                    <div id='products' className='grid w-full grid-cols-2 gap-4 mx-auto mt-2 sm:grid-cols-4 '>
+                    {productList.length ===0 &&
+                        <p>There is no products that would match your query of {filter}</p>
+                        }
+
+                    <div id='products' className='grid w-full grid-cols-2 gap-4 mx-auto mt-2 md:grid-cols-4 '>
+                        
                         {productList.map((product, index) => 
                             <Link to={"/" + AppPaths.PRODUCT.replace(':productId', product.id)} key={index}>
                             <div id="product" className='text-center' >
