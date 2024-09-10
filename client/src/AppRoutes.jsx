@@ -13,6 +13,7 @@ import ProductPage from "./components/ProductPage/ProductPage";
 import ProductsPage from "./components/ProductsPage/ProductsPage";
 import Login from "./components/Sign/Login";
 import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
+import Checkout from "./components/Checkout/Checkout";
 import Signup from "./components/Sign/Signup";
 
  class AppRoutes extends Component {
@@ -28,6 +29,7 @@ import Signup from "./components/Sign/Signup";
           <Route path={AppPaths.LOGIN} element={<Login/>} />
           <Route path={AppPaths.SIGN_UP} element={<Signup/>} />
           <Route path={AppPaths.CART}  element={<ShoppingCart/>} />
+          <Route path={AppPaths.CHECKOUT}  element={<Checkout/>} />
         </Routes>
         <Footer></Footer>
 
