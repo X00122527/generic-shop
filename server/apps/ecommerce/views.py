@@ -46,12 +46,20 @@ class CartUpdateView(APIView):
         print('in patch')
         instance = CartItems.objects.get(id=itemId)
         serializer = CartItemSerializer(instance=instance, data=request.data, partial=True, context={"request": request})
+
+        new_qty = request.data['quantity']
+        if new_qty == 0:
+            if serializer.is_valid():
+                serializer.save() # this is quite redundant since we are going to delete item anyway but left for front end ease
+            instance.delete()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+
         if serializer.is_valid():
             serializer.save()
             print(serializer.errors)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

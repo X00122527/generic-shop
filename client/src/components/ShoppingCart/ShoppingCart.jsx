@@ -94,6 +94,12 @@ function ShoppingCart() {
 
 
     const updateItem = (qty, itemId) => {
+
+        if(qty === 0){
+            removeItem(itemId);
+            return;
+        }
+
         const options = {
             method: 'PATCH',
             headers: {
@@ -114,7 +120,8 @@ function ShoppingCart() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                console.log("updated Item: ", data);
+
                 setCartDetailsList([data]); // this has to insert it back into specific place
                 toast.success('Cart was updated.', {
                     position: "bottom-center",
@@ -172,8 +179,9 @@ function ShoppingCart() {
             });
     }
 
-    const removeItem = (index, itemId) => {
-        setCartDetailsList(cartDetailsList.filter((cart, i) => i !== index))
+    const removeItem = (itemId) => {
+        console.log(cartDetailsList);
+        setCartDetailsList(cartDetailsList.filter(item => item.id !== itemId));
         deleteItem(itemId);
         calculateCart();
     }
@@ -196,7 +204,7 @@ function ShoppingCart() {
 
                 {/* for each product - display a title, price, selected options (colors,size) and quantity that can be adjusted */}
                 {cartDetailsList.map((cartDetails, index) => (
-                    <div className='flex py-8 gap-x-2 border-b-[1px]' key={index}>
+                    <div className='flex py-8 gap-x-2 border-b-[1px]' key={cartDetails.id}>
                         <div id='img'>
                             <Link to={"/" + AppPaths.PRODUCT.replace(':productId', cartDetails.product)}>
 
@@ -208,7 +216,7 @@ function ShoppingCart() {
                             <span className='font-mono font-semibold'>{cartDetails.title}</span>
 
                             <span
-                                onClick={(e) => removeItem(index, cartDetails.id)}
+                                onClick={(e) => removeItem(cartDetails.id)}
                                 className='absolute top-0 right-0'>X</span>
                             <p className='text-gray-600'>{cartDetails.option_1} | {cartDetails.option_2}</p>
                             <p className='font-serif text-black'>{cartDetails.price}</p>
