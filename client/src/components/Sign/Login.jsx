@@ -4,13 +4,13 @@ import ApiEndpoints from "../../api/apiEndpoints";
 import AppPaths from "../../lib/appPaths";
 import CookieUtil from "../../util/cookieUtil";
 import ServerUrl from "../../api/serverUrl";
-import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import GoogleSSO from "./GoogleSSO";
+import CommonUtil from "../../util/commonUtil";
+import { useNavigate, Link } from "react-router-dom";
+
 
 function Login({ location }) {
-
-
 
   const {
     register,
@@ -18,6 +18,16 @@ function Login({ location }) {
     formState: { errors },
   } = useForm();
 
+  let navigate = useNavigate();
+
+  // redirect already logged in user to homepage
+  useEffect(() => {
+    if (CommonUtil.getUserId()) {
+      navigate("/", {
+        replace: true,
+      });
+    }
+  }, []);
 
   const onSubmit = async (loginData) => {
 
@@ -30,21 +40,18 @@ function Login({ location }) {
       body: JSON.stringify(loginData)
     };
     const url = ServerUrl.BASE_URL + ApiEndpoints.LOGIN;
-    let successLoginData;
-    fetch(url, options)
+
+    var successLoginData = await  fetch(url, options)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
-      .then(data => {
-        console.log(data);
-        successLoginData = data;
-      })
       .catch(error => {
         console.error('Fetch error:', error);
       });
+
 
     if (successLoginData) {
       Object.keys(successLoginData).forEach((key) => {
@@ -68,6 +75,8 @@ function Login({ location }) {
     }
     return null;
   };
+
+
 
   return (
     // <div className='w-full mx-auto'>
@@ -108,18 +117,21 @@ function Login({ location }) {
           <button className="w-full p-2 border-2 border-black btn-block" type="submit">
             Login
           </button>
+          <p>OR</p>
+          <GoogleSSO></GoogleSSO>
+
         </form>
 
         <p id="authFormFooter">
           Don't have any account! <Link to="/signup">Click here</Link> to
           singup.
         </p>
+
       </div>
       
 
 
 
-<GoogleSSO></GoogleSSO>
 
     </div>
   )

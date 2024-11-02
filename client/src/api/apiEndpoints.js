@@ -8,7 +8,8 @@ const ApiEndpoints = {
   UPDATE_CART_ITEM: "api/v1/carts/items/:itemId",
   LOGIN: "api/v1/login",
   SIGNUP: "api/v1/signup",
-  GOOGLE_AUTH: "api/v1/auth-receiver"
+  GOOGLE_AUTH: "api/v1/auth-receiver",
+  USER: "api/v1/user"
 
 
 
