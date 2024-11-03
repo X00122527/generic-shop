@@ -18,3 +18,13 @@ class CartItems(models.Model):
     option_1 = models.CharField(max_length=100)
     option_2 = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
+
+class Discount(models.Model):
+    code = models.CharField(max_length=100)
+    discount = models.IntegerField()
+    valid_from = models.DateTimeField()
+    valid_until = models.DateTimeField()
+
+class DiscountItems(models.Model): # optional
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, null=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
