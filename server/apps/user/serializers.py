@@ -4,13 +4,20 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from apps.user.models import User
+from apps.user.models import User, UserAddress
 
+class UserAddressSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = UserAddress
+		fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):
+	address = UserAddressSerializer(many=False, read_only=True)
+
 	class Meta:
 		model = User
-		fields = ['id', 'first_name', 'last_name', 'email', 'username']
+		fields = ['id', 'first_name', 'last_name', 'email', 'username', 'address']
 
 
 class LoginSerializer(TokenObtainPairSerializer):
@@ -52,11 +59,9 @@ class SignupSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = (
-			'first_name', 'last_name', 'image', 'email', 'password', 'passwordTwo'
+			'email', 'password', 'passwordTwo'
 		)
 		extra_kwargs = {
-			'first_name': {'required': True},
-			'last_name': {'required': True},
 			'email': {'required': True},
 			'password': {'required': True},
 		}
@@ -70,13 +75,56 @@ class SignupSerializer(serializers.ModelSerializer):
 
 	@transaction.atomic
 	def create(self, validated_data):
+		print(validated_data)
 		try:
 			user = User.objects.create(
 				username=validated_data['email'],
 				email=validated_data['email'],
-				first_name=validated_data['first_name'],
-				last_name=validated_data['last_name'],
-				image=validated_data['image']
+			)
+		except Exception as ex:
+			print(ex)
+			raise serializers.ValidationError(
+				{"message": ex})
+
+		user.set_password(validated_data['password'])
+		user.save()
+
+		return user
+
+class GoogleSignupSerializer(serializers.ModelSerializer):
+	email = serializers.EmailField(
+		required=True,
+		validators=[UniqueValidator(queryset=User.objects.all())]
+	)
+	password = serializers.CharField(
+		write_only=True, required=True, validators=[validate_password]
+	)
+	passwordTwo = serializers.CharField(write_only=True, required=True)
+
+	class Meta:
+		model = User
+		fields = (
+			'email', 'password', 'passwordTwo'
+		)
+		extra_kwargs = {
+			'email': {'required': True},
+			'password': {'required': True},
+		}
+
+	def validate(self, attrs):
+		if attrs['password'] != attrs['passwordTwo']:
+			raise serializers.ValidationError(
+				{"password": "Password fields didn't match."}
+			)
+		return attrs
+
+	@transaction.atomic
+	def create(self, validated_data):
+		print(validated_data)
+		try:
+			user = User.objects.create(
+				username=validated_data['email'],
+				email=validated_data['email'],
 			)
 		except Exception as ex:
 			print(ex)

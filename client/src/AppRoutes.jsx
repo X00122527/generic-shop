@@ -15,6 +15,7 @@ import Login from "./components/Sign/Login";
 import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
 import Checkout from "./components/Checkout/Checkout";
 import Signup from "./components/Sign/Signup";
+import UserView from "./components/User/UserView";
 
  class AppRoutes extends Component {
   render() {
@@ -30,6 +31,8 @@ import Signup from "./components/Sign/Signup";
           <Route path={AppPaths.SIGN_UP} element={<Signup/>} />
           <Route path={AppPaths.CART}  element={<ShoppingCart/>} />
           <Route path={AppPaths.CHECKOUT}  element={<Checkout/>} />
+          <Route path={AppPaths.USER}  element={<UserView/>} />
+
         </Routes>
         <Footer></Footer>
 

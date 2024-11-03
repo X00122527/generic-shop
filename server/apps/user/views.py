@@ -27,3 +27,10 @@ class SignupApiView(CreateAPIView):
 	permission_classes = [AllowAny]
 	queryset = User.objects.all()
 	serializer_class = SignupSerializer
+
+class UserApiView(APIView):
+	def get(self, request):
+		u = User.objects.get(pk=request.user.id)
+		serializer = UserSerializer(u, many=False)
+		return Response(serializer.data)
+

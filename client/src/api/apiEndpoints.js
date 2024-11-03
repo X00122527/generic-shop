@@ -9,7 +9,8 @@ const ApiEndpoints = {
   LOGIN: "api/v1/login",
   SIGNUP: "api/v1/signup",
   GOOGLE_AUTH: "api/v1/auth-receiver",
-  USER: "api/v1/user"
+  USER: "api/v1/user",
+  APPLY_DISCOUNT: "api/v1/apply-discount"
 
 
 
