@@ -1,12 +1,18 @@
 from rest_framework import serializers
-from apps.ecommerce.models import Cart, CartItems
+from apps.ecommerce.models import Cart, CartItems, Discount
 from django.db import transaction
+
+
+class DiscountSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Discount
+		fields = "__all__"
+
 
 class CartSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Cart
 		fields = "__all__"
-
 
 
 class CartItemSerializer(serializers.ModelSerializer):

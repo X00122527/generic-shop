@@ -4,12 +4,16 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from apps.ecommerce.serializers import CartItemSerializer, CartSerializer
-from apps.ecommerce.models import CartItems, Cart
+from apps.ecommerce.models import CartItems, Cart, Discount
 from apps.product.models import Product
 from notifications.signals import notify
-from apps.user.models import User
+from django.utils import timezone
+from django.db.models import F, Sum
+from django.db.models.functions import Cast
+
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
+from django.db.models import DecimalField
 
 # class CartView(APIView):
 #
@@ -69,3 +73,22 @@ class CartUpdateView(APIView):
         item.delete()
 
         return Response("Item remove from cart.", status=status.HTTP_200_OK)
+
+
+class DiscountApplyView(APIView):
+
+    def post(self, request):
+        # we just discount code from the user
+        # cart_id should be extracted from the jwt or userid
+        # return: new subtotal OR message that the discount is expired
+        try:
+            discount = Discount.objects.get(code=request.data['code'])
+            today = timezone.now()
+            if discount and (discount.valid_from <= today and discount.valid_until >= today):
+                total_sum = float(CartItems.objects.filter(cart_id=342342342).aggregate(
+                    total_price=Sum(F('quantity') * F('product__price'))
+                )['total_price'])
+                after_discount = total_sum - (total_sum * (1 / 100 ))
+                return Response(after_discount, status=status.HTTP_200_OK)
+        except Discount.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
