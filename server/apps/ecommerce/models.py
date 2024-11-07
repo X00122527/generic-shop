@@ -28,3 +28,13 @@ class Discount(models.Model):
 class DiscountItems(models.Model): # optional
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, null=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
+
+
+class ShippingPrice(models.Model):
+    country = models.CharField(max_length=100)
+    min_weight = models.DecimalField(max_digits=5, decimal_places=0)
+    max_weight = models.DecimalField(max_digits=5, decimal_places=0)
+    price = MoneyField(max_digits=5, decimal_places=2, default_currency='USD', default=0)
+
+    def is_within_range(self, value):
+        return self.min_value <= value <= self.max_value

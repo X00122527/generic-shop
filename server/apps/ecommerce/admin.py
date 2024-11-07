@@ -1,4 +1,4 @@
 from django.contrib import admin
-from apps.ecommerce.models import Discount, DiscountItems
+from apps.ecommerce.models import Discount, DiscountItems, ShippingPrice
 # Register your models here.
-admin.site.register([Discount, DiscountItems, ])
+admin.site.register([Discount, DiscountItems, ShippingPrice])

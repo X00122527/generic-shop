@@ -10,10 +10,9 @@ const ApiEndpoints = {
   SIGNUP: "api/v1/signup",
   GOOGLE_AUTH: "api/v1/auth-receiver",
   USER: "api/v1/user",
-  APPLY_DISCOUNT: "api/v1/apply-discount"
-
-
-
+  APPLY_DISCOUNT: "api/v1/apply-discount",
+  SHIPPING_DETAILS: "api/v1/user/shipping-details",
+  SHIPPING_PRICE: "api/v1/shipping-price/:location",
 };
 
 export default ApiEndpoints;

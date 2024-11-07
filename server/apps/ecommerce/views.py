@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from apps.ecommerce.serializers import CartItemSerializer, CartSerializer
-from apps.ecommerce.models import CartItems, Cart, Discount
+from apps.ecommerce.models import CartItems, Cart, Discount, ShippingPrice
 from apps.product.models import Product
 from notifications.signals import notify
 from django.utils import timezone
@@ -74,6 +74,15 @@ class CartUpdateView(APIView):
 
         return Response("Item remove from cart.", status=status.HTTP_200_OK)
 
+class ShippingPriceView(APIView):
+
+    def get(self, request, location):
+        r = ShippingPrice.objects.get(country=location)
+        if r:
+            return Response(r.price.amount, status=status.HTTP_200_OK)
+        else:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
 
 class DiscountApplyView(APIView):
 
@@ -92,3 +101,4 @@ class DiscountApplyView(APIView):
                 return Response(after_discount, status=status.HTTP_200_OK)
         except Discount.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
+
