@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PayPalComponent from './PayPalComponent'
 import GooglePayComponent from './GooglePayComponent'
 import ServerUrl from '../../api/serverUrl';
@@ -12,9 +12,11 @@ function Checkout() {
 
     const [cartDetailsList, setCartDetailsList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [discount, setDiscount] = useState("");
+    const [discountCode, setDiscountCode] = useState("");
     const [subtotal, setSubtotal] = useState(0);
     const [total, setTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [shippingPrice, setShippingPrice] = useState(0);
     const [shippingDetails, setShippingDetails] = useState({
         first_name: "",
         last_name: "",
@@ -38,7 +40,15 @@ function Checkout() {
     });
 
     useEffect(() => {
+        calculateCart();
+
+    }, [shippingDetails])
+
+    useEffect(() => {
         fetchCartItems();
+    }, []);
+
+    useEffect(() => {
         fetchShippingDetails();
     }, []);
 
@@ -83,9 +93,39 @@ function Checkout() {
         setTotal(subtotal);
     }
 
-    const calculateShipping = () => {
-        // first have to verify that such address is correct which will probably rely on some free external API to validation
-        // then grab prices from the database <todo> 
+    const fetchShippingPrice = async (location) => {
+        // (first) have to verify that such address is correct which will probably rely on some free external API to validation - maybe at some later stage 
+        // then grab prices from the database <todo>
+        const options = {
+            method: 'GET',
+            headers: {
+                Authorization: "Bearer " + CookieUtil.getCookie('access'), 
+            },
+        };
+
+        const url = ServerUrl.BASE_URL + ApiEndpoints.SHIPPING_PRICE.replace(':location', location);
+
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // populate register
+                setShippingPrice(data);
+                setTotal(total+data);
+                console.log("shipping price: ", data);
+            })
+            // .then(data => { // is this better or is finally better?
+            //     console.log('data and total', data, total);
+            //     // setTotal(total + data);
+            // })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            })
+
     }
 
     const fetchShippingDetails = async () => {
@@ -112,10 +152,14 @@ function Checkout() {
                 setShippingDetails(data);
                 console.log("shipping details: ", data);
             })
+            .then(() => { // is this better or is finally better?
+                setIsLoading(false);
+            })
             .catch(error => {
                 console.error('Fetch error:', error);
-            });
-        setIsLoading(false);
+            })
+
+
     }
 
     const fetchCartItems = async () => {
@@ -139,8 +183,6 @@ function Checkout() {
             })
             .then(data => {
                 setCartDetailsList(data);
-                setSubtotal()
-                console.log("data: ", data);
             })
             .catch(error => {
                 console.error('Fetch error:', error);
@@ -149,10 +191,11 @@ function Checkout() {
     }
 
     const applyDiscount = async () => {
+
         setIsLoading(true);
 
         const body = JSON.stringify({
-            code: discount,
+            code: discountCode,
         });
 
         const options = {
@@ -168,23 +211,30 @@ function Checkout() {
 
         const url = ServerUrl.BASE_URL + ApiEndpoints.APPLY_DISCOUNT;
 
-        fetch(url, options)
-            .then(response => {
-                if (!response.ok) {
-                    // throw new Error('Discount is invalid or expired.');
-                    unsuccessfulToast("Discount is invalid or expired.")
-                }
-                return response.json();
-            })
-            .then(data => {
-                setSubtotal(data);
+        setTimeout(() => {
+            fetch(url, options)
+                .then(response => {
+                    if (!response.ok) {
+                        // throw new Error('Discount is invalid or expired.');
+                        unsuccessfulToast("Discount is invalid or expired.")
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // setSubtotal(data);
+                    console.log('discount data: ',data)
+                    successfulToast("Discount was applied successfully.")
+                    setDiscount(data);
+                    setTotal(data);
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                })
+        }, 2000);
 
-                successfulToast("Discount was applied successfully.")
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-        setIsLoading(false);
     }
 
 
@@ -200,6 +250,10 @@ function Checkout() {
         })
 
         // post data here
+    }
+
+    if(isLoading){
+        return <div>data is loading</div>
     }
 
     return (
@@ -228,16 +282,22 @@ function Checkout() {
                         <h2 className='mb-6 text-xl'>Shipping address</h2>
 
                         <div className="mb-6">
-                            <label for="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                            <label for="country" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
                             <select
-                                {...register("country", { required: true })}
-                                id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                                {...register("country", { 
+                                    onChange: (e) => fetchShippingPrice(e.target.value),
+                                    required: true })}
+                                id="country" 
+                                defaultValue={shippingDetails.country} // this doesn't seem to work
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 {/* <option selected>Choose a country</option> */}
                                 <option value={"CA"}>Canada</option>
                                 <option value={"USA"}>USA</option>
-                                <option value={"Ireland"}>Ireland</option>
+                                <option value={"IRE"}>Ireland</option>
                                 <option value={"DE"}>Germany</option>
                             </select>
+
                         </div>
 
                         <div className="grid gap-6 mb-6 md:grid-cols-2">
@@ -254,7 +314,7 @@ function Checkout() {
                                     defaultValue={shippingDetails.last_name}
 
                                     {...register("last_name", { required: true })}
-                                    type="text" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  />
+                                    type="text" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
 
                         </div>
@@ -264,7 +324,7 @@ function Checkout() {
                             <input
                                 defaultValue={shippingDetails.address.line_1}
                                 {...register("line_1", { required: true })}
-                                type="text" id="ad1" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  />
+                                type="text" id="ad1" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         </div>
 
                         <div className="mb-6">
@@ -312,7 +372,7 @@ function Checkout() {
                 {cartDetailsList.map((item, index) => (
                     <div id="row" className='flex pt-2 flex-inline'>
                         <div>
-                            <img className='w-16 h-16' src={item.image} />
+                            <img className='w-20 h-16' src={item.image} />
                         </div>
                         <div className='grow'>
                             <span className='font-mono'>{item.title}</span>
@@ -330,16 +390,16 @@ function Checkout() {
                     <div className='w-full'>
                         <label for="discount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount code</label>
                         <input
-                            onChange={e => setDiscount(e.target.value)}
+                            onChange={e => setDiscountCode(e.target.value)}
                             disabled={isLoading}
-                            type="text" id="discount" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required />
+                            type="text" id="discount" className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="" required />
                     </div>
                     <div>
                         <button
                             onClick={applyDiscount}
                             disabled={isLoading}
-                            type="submit" className="mt-7 float-right text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium  text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Apply</button>
+                            type="submit" className={`${isLoading ? 'bg-gray-500' : 'bg-blue-700'} mt-7 float-right text-white hover:bg-blue-800 font-medium  text-sm w-full sm:w-auto px-5 py-2.5 text-center`}>
+                            {isLoading ? 'Applying' : 'Apply'}</button>
                     </div>
                 </div>
 
@@ -348,19 +408,26 @@ function Checkout() {
                     <div className='flex justify-between'>
                         <span>Subtotal</span>
                         <span>${subtotal || total}</span>
-
                     </div>
                     <hr></hr>
+                    {discount !== 0 &&
+                        <>
+                            <div className='flex justify-between text-red-700'>
+                                <span>Discount</span>
+                                <span>-${subtotal - discount}</span>
+                            </div>
+                            <hr></hr>
+                        </>
+                    }
                     <div className='flex justify-between'>
                         <p>Estimated Shipping</p>
-                        calculate now!
-                        {/* <span>$0</span> */}
+                        <span>{shippingPrice === 0 ? "Select Country" : "$" + shippingPrice}</span>
 
                     </div>
                     <hr></hr>
                     <div className='flex justify-between'>
                         <p className='font-semibold'>Total</p>
-                        <span>$0</span>
+                        <span>${total}</span>
                     </div>
 
                 </div>
