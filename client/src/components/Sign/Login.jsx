@@ -30,14 +30,13 @@ function Login({ location }) {
   }, []);
 
   const onSubmit = async (loginData) => {
-
+    const formData = new FormData();
+    Object.keys(loginData).forEach((key) => {
+      formData.append(key, loginData[key]);
+    });
     const options = {
       method: 'POST',
-      headers: {
-        Accept: "application/json, text/plain",
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-      body: JSON.stringify(loginData)
+      body: formData
     };
     const url = ServerUrl.BASE_URL + ApiEndpoints.LOGIN;
 
@@ -52,12 +51,12 @@ function Login({ location }) {
         console.error('Fetch error:', error);
       });
 
-
     if (successLoginData) {
       Object.keys(successLoginData).forEach((key) => {
         CookieUtil.setCookie(key, successLoginData[key]);
       });
-      window.location.href = AppPaths.HOME;
+      navigate(AppPaths.SHOP, {replace: true});
+      window.location.reload();
     }
   };
 
