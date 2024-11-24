@@ -5,6 +5,9 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 
+// import "./App.css";
+
+
 export default function CheckoutForm({dpmCheckerLink}) {
   const stripe = useStripe();
   const elements = useElements();
@@ -27,7 +30,7 @@ export default function CheckoutForm({dpmCheckerLink}) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:8000/complete",
+        return_url: "http://localhost:5173/complete",
       },
     });
 
@@ -51,22 +54,22 @@ export default function CheckoutForm({dpmCheckerLink}) {
 
   return (
     <>
-      <form id="payment-form" onSubmit={handleSubmit}>
+      <form className="payment-form" onSubmit={handleSubmit}>
 
-        <PaymentElement id="payment-element" options={paymentElementOptions} />
-        <button disabled={isLoading || !stripe || !elements} id="submit">
-          <span id="button-text">
-            {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+        <PaymentElement className="payment-element" options={paymentElementOptions} />
+        <button disabled={isLoading || !stripe || !elements} className="submit">
+          <span className="button-text">
+            {isLoading ? <div className="spinner"></div> : "Pay now"}
           </span>
         </button>
         {/* Show any error or success messages */}
-        {message && <div id="payment-message">{message}</div>}
+        {message && <div className="payment-message">{message}</div>}
       </form>
       {/* [DEV]: Display dynamic payment methods annotation and integration checker */}
-      <div id="dpm-annotation">
+      <div className="dpm-annotation">
         <p>
           Payment methods are dynamically displayed based on customer location, order amount, and currency.&nbsp;
-          <a href={dpmCheckerLink} target="_blank" rel="noopener noreferrer" id="dpm-integration-checker">Preview payment methods by transaction</a>
+          <a href={dpmCheckerLink} target="_blank" rel="noopener noreferrer" className="dpm-integration-checker">Preview payment methods by transaction</a>
         </p>
       </div>
     </>
