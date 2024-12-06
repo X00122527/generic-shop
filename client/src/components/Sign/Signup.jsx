@@ -1,22 +1,23 @@
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import ApiEndpoints from "../../api/apiEndpoints";
 import AppPaths from "../../lib/appPaths";
 import CookieUtil from "../../util/cookieUtil";
 import ServerUrl from "../../api/serverUrl";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import GoogleSSO from "./GoogleSSO";
 
-const Signup = ({ history }) => {
+const Signup = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
-  
+  let navigate = useNavigate();
+
   const password = useRef({});
   password.current = watch("password");
-  const image = watch("image");
 
   const onSubmit = async (signupData) => {
     console.log(signupData);
@@ -29,11 +30,7 @@ const Signup = ({ history }) => {
 
     const options = {
       method: 'POST',
-      headers: {
-        Accept: "application/json, text/plain",
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-      body: JSON.stringify(formData)
+      body: formData,
     }
 
     fetch(url, options)
@@ -44,7 +41,7 @@ const Signup = ({ history }) => {
         return response.json();
       })
       .then(data => {
-        console.log(data);
+        console.log('data', data);
         successLoginData = data;
       })
       .catch(error => {
@@ -55,99 +52,86 @@ const Signup = ({ history }) => {
       Object.keys(successLoginData).forEach((key) => {
         CookieUtil.setCookie(key, successLoginData[key]);
       });
-      window.location.href = AppPaths.HOME;
     }
 
+    console.log('successLoginData', successLoginData)
 
     if (successLoginData) {
-      history.push({
-        pathname: AppPaths.LOGIN,
-        state: { redirectFrom: AppPaths.SIGN_UP },
-      });
+      navigate(AppPaths.LOGIN, { replace: true });
+      window.location.reload();
     }
   };
 
   return (
-    <div id="authFormContainer">
-      <div id="authForm">
-        <h2 id="authTitle">Sign Up</h2>
-        {errors.message && (
-              <p className="requiredFieldError">{errors.message}</p>
-            )}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="authFieldContainer">
-            <input
-              className="authField"
-              type="text"
-              placeholder="First Name"
-              {...register("first_name", { required: true })}
-            />
-            {errors.first_name && (
-              <p className="requiredFieldError">This field is required</p>
-            )}
-          </div>
-          <div className="authFieldContainer">
-            <input
-              className="authField"
-              type="text"
-              placeholder="Last Name"
-              {...register("last_name", { required: true })}
-            />
-            {errors.last_name && (
-              <p className="requiredFieldError">This field is required</p>
-            )}
-          </div>
-          <div className="authFieldContainer">
-            <input
-              className="authField"
-              type="email"
-              placeholder="Email"
-              {...register("email", { required: true })}
-            />
-            {errors.email && (
-              <p className="requiredFieldError">This field is required</p>
-            )}
-          </div>
+    <section class="bg-gray-50 dark:bg-gray-900">
+      <div class="flex flex-col items-center px-6 mx-auto md:h-screen lg:py-0">
 
-          <div className="authFieldContainer">
-            <input
-              className="authField"
-              type="password"
-              placeholder="Password"
-              {...register("password", { required: true })}
-            />
-            {errors.password && (
-              <p className="requiredFieldError">This field is required</p>
-            )}
-          </div>
-          <div className="authFieldContainer">
-            <input
-              className="authField"
-              type="password"
-              name="passwordTwo"
-              placeholder="Confirm Password"
-              {...register("passwordTwo", {
-                required: "This field is required",
-                validate: (value) =>
-                  value === password.current || "The passwords doesn't match",
-              })}
-            />
-            {errors.passwordTwo && (
-              <p className="requiredFieldError">
-                {errors.passwordTwo?.message}
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Create an account
+            </h1>
+            <div>
+            <GoogleSSO></GoogleSSO>
+            <p className="text-center">or</p>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} class="space-y-4 md:space-y-6" >
+              <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                <input
+                  {...register("email", { required: true })}
+                  type="email"  id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " />
+              </div>
+              <div>
+                <label for="f_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+                <input
+                  {...register("first_name", { required: true })}
+                  type="text" id="f_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " />
+              </div>
+              <div>
+                <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+                <input
+                  {...register("last_name", { required: true })}
+                  type="text"  id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " />
+              </div>
+              <div>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <input
+                  {...register("password", { required: true })}
+                  type="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " />
+              </div>
+              <div>
+                <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+                <input
+                  {...register("passwordTwo", {
+                    required: "This field is required",
+                    validate: (value) =>
+                      value === password.current || "The passwords doesn't match",
+                  })}
+                  type="password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " required="" />
+                {errors.passwordTwo && (
+                  <p className="requiredFieldError">
+                    {errors.passwordTwo?.message}
+                  </p>
+                )}
+              </div>
+              <div class="flex items-start">
+                <div class="flex items-center h-5">
+                  <input id="terms" aria-describedby="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="" />
+                </div>
+                <div class="ml-3 text-sm">
+                  <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+                </div>
+              </div>
+              <button type="submit" class="w-full text-white bg-blue-500 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
+              <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                Already have an account? <Link to="/login">Log in here</Link>
               </p>
-            )}
+            </form>
           </div>
-          <br />
-          <button className="btn btn-outline-warning btn-block" type="submit">
-            Sign Up
-          </button>
-        </form>
-        <p id="authFormFooter">
-          Already have an account. <Link to="/login">Click here</Link> to login.
-        </p>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
