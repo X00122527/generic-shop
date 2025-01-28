@@ -196,7 +196,7 @@ function Checkout() {
                 return response.json();
             })
             .then(data => {
-                setCartDetailsList(data);
+                setCartDetailsList(data.items);
             })
             .catch(error => {
                 console.error('Fetch error:', error);

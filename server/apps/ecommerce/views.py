@@ -50,9 +50,14 @@ class CartView(APIView):
 
     def get(self, request, cart_id):
         # cart_id = request.POST.get('cart_id')
-        instance = CartItems.objects.filter(cart_id=cart_id)
-        serializer = CartItemSerializer(instance, many=True, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        items = CartItems.objects.filter(cart_id=cart_id)
+        total_items = sum([instance.quantity for instance in items])
+        serializer = CartItemSerializer(items, many=True, context={"request": request})
+        response = {
+            "total_items": total_items,
+            "items": serializer.data
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class CartUpdateView(APIView):

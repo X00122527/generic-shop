@@ -31,8 +31,6 @@ function Navbar() {
       // body: JSON.stringify({cart_id: cart_id})
     };
 
-    
-
     fetch(url, options)
       .then(response => {
         if (!response.ok) {
@@ -41,8 +39,8 @@ function Navbar() {
         return response.json();
       })
       .then(data => {
-        console.log(data);
-        setCartCount(data.length);
+        console.log(data.items);
+        setCartCount(data.total_items);
         setIsLoading(false);
       })
       .catch(error => {

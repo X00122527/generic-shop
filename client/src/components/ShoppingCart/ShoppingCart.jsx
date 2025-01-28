@@ -73,8 +73,8 @@ function ShoppingCart() {
             })
             .then(data => {
                 console.log(data);
-                setCartDetailsList(data);
-                setCurrency(data[0].currency)
+                setCartDetailsList(data.items);
+                setCurrency(data.items[0].currency)
                 setIsLoading(false);
             })
             .catch(error => {

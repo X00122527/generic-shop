@@ -156,7 +156,7 @@ function ProductPage(props) {
             })
             .then(data => {
                 console.log(data);
-                updateCartCount(data.cart_item_count);
+                updateCartCount(data.total_items);
                 toast.success('Item was added to your cart!', {
                     position: "bottom-center",
                     autoClose: 2000,

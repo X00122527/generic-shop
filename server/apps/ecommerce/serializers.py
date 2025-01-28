@@ -24,14 +24,14 @@ class CartItemSerializer(serializers.ModelSerializer):
 	price = serializers.FloatField(source='product.price.amount', read_only=True)
 	currency = serializers.CharField(source='product.price.currency', read_only=True)
 	image = serializers.ImageField(source='product.images.main_image.image', read_only=True)
-	cart_item_count = serializers.SerializerMethodField(read_only=True)
+	# cart_item_count = serializers.SerializerMethodField(read_only=True)
 	thumbnail_url = serializers.SerializerMethodField(read_only=True)
 	class Meta:
 		model = CartItems
-		fields = ["id", "quantity", "option_1", "option_2", "product", "title", "price", "image", "currency", "cart_item_count", "thumbnail_url"]
+		fields = ["id", "quantity", "option_1", "option_2", "product", "title", "price", "image", "currency", "thumbnail_url"]
 
-	def get_cart_item_count(self, instance):
-		return CartItems.objects.filter(cart_id=instance.cart.cart_id).count()
+	# def get_cart_item_count(self, instance):
+	# 	return CartItems.objects.filter(cart_id=instance.cart.cart_id).count()
 
 	def get_thumbnail_url(self, instance):
 		product_img = instance.product.images.main_image() # p.product.images.main_image().image
