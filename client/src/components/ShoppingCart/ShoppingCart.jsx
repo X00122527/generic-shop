@@ -127,7 +127,15 @@ function ShoppingCart() {
             .then(data => {
                 console.log("updated Item: ", data);
 
-                setCartDetailsList([data]); // this has to insert it back into specific place
+                // setCartDetailsList([data]); // this has to insert it back into specific place
+                setCartDetailsList(prevItems => 
+                    prevItems.map(item => 
+                        item.id === itemId
+                        ? data
+                        : item
+                    )
+                );
+
                 toast.success('Cart was updated.', {
                     position: "bottom-center",
                     autoClose: 2000,
