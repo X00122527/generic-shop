@@ -126,9 +126,11 @@ function ProductPage(props) {
 
         // in the backend - since 1 user can only have 1 cart we will just create an entry on init. and keep adding/removing items to cartItems on "addToCart" / "removeFromCart" activity
         // let url = ServerUrl.BASE_URL + ApiEndpoints.ITEM_CART.replace("<itemId>", 1);
-        let url = ServerUrl.BASE_URL + ApiEndpoints.CART;
+        let url = ServerUrl.BASE_URL + ApiEndpoints.CART + "/"+CookieUtil.getCartId();
 
         jsonData['product'] = Number(param.productId);
+
+        // jsonData['cart_id'] = CookieUtil.getCartId(); // is it possible to move it into request.post..?
 
         const options = {
             method: 'POST',
@@ -136,7 +138,7 @@ function ProductPage(props) {
                 Accept: "application/json, text/plain",
                 "Content-Type": "application/json; charset=UTF-8",
             },
-            body: JSON.stringify(jsonData)
+            body: JSON.stringify(jsonData, )
         };
 
         if (CookieUtil.getCookie('access')){
@@ -425,19 +427,19 @@ function ProductPage(props) {
                     <Accordion
                         title={accordions.accordion_1.title}
                         text={accordions.accordion_1.text}
-                        isOpen={true}
+                        isOp={true}
                     ></Accordion>
 
                     <Accordion
                         title={accordions.accordion_2.title}
                         text={accordions.accordion_2.text}
-                        isOpen={false}
+                        isOp={false}
                     ></Accordion>
 
                     <Accordion
                         title={accordions.accordion_3.title}
                         text={accordions.accordion_3.text}
-                        isOpen={false}
+                        isOp={false}
                     ></Accordion>
 
 

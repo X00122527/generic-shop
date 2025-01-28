@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
+import 'flowbite'
 import PayPalComponent from './PayPalComponent'
 import GooglePayComponent from './GooglePayComponent'
 import ServerUrl from '../../api/serverUrl';
 import ApiEndpoints from '../../api/apiEndpoints';
 import CookieUtil from "../../util/cookieUtil";
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import AppPaths from '../../lib/appPaths';
+import CommonUtil from '../../util/commonUtil';
+import OrderSummary from './OrderSummary';
 
 function Checkout() {
 
@@ -23,6 +27,8 @@ function Checkout() {
         email: "",
         address: {}
     })
+    const navigate = useNavigate();
+
 
     const {
         register,
@@ -32,11 +38,15 @@ function Checkout() {
         setValue,
         reset
     } = useForm({
-        // defaultValues: {
-        //   item_type: ItemType.Photocard,
-        //   condition: Condition['Brand new'],
-        //   location: "default",
-        // }
+        defaultValues: {
+            line_1: "",
+            line_2: "",
+            post_code: "",
+            city: "",
+
+            //   condition: Condition['Brand new'],
+            //   location: "default",
+        }
     });
 
     useEffect(() => {
@@ -46,10 +56,13 @@ function Checkout() {
 
     useEffect(() => {
         fetchCartItems();
+        calculateCart();
     }, []);
 
     useEffect(() => {
-        fetchShippingDetails();
+        if (CookieUtil.getCookie('access')) {
+            fetchShippingDetails(); // we want to execute it only if user is logged in so check if cookie is valid
+        }
     }, []);
 
     const successfulToast = (message) => {
@@ -99,7 +112,7 @@ function Checkout() {
         const options = {
             method: 'GET',
             headers: {
-                Authorization: "Bearer " + CookieUtil.getCookie('access'), 
+                Authorization: "Bearer " + CookieUtil.getCookie('access'),
             },
         };
 
@@ -115,7 +128,7 @@ function Checkout() {
             .then(data => {
                 // populate register
                 setShippingPrice(data);
-                setTotal(total+data);
+                setTotal(total + data);
                 console.log("shipping price: ", data);
             })
             // .then(data => { // is this better or is finally better?
@@ -163,6 +176,8 @@ function Checkout() {
     }
 
     const fetchCartItems = async () => {
+        const cart_id = CookieUtil.getCartId();
+        const url = ServerUrl.BASE_URL + ApiEndpoints.CART+"/"+cart_id;
 
         const options = {
             method: 'GET',
@@ -170,9 +185,8 @@ function Checkout() {
                 Accept: "application/json, text/plain",
                 "Content-Type": "application/json; charset=UTF-8",
             },
+            // body: JSON.stringify({cart_id: cart_id})
         };
-
-        const url = ServerUrl.BASE_URL + ApiEndpoints.CART;
 
         fetch(url, options)
             .then(response => {
@@ -222,7 +236,7 @@ function Checkout() {
                 })
                 .then(data => {
                     // setSubtotal(data);
-                    console.log('discount data: ',data)
+                    console.log('discount data: ', data)
                     successfulToast("Discount was applied successfully.")
                     setDiscount(data);
                     setTotal(data);
@@ -239,45 +253,54 @@ function Checkout() {
 
 
     const onSubmit = async () => {
-        // e.stopPropagation();
-        e.preventDefault();
-        // console.log(e);
 
         const formData = new FormData();
-        Object.keys(listingData).forEach((key) => {
+        // Object.keys(listingData).forEach((key) => {
 
-            formData.append(key, listingData[key]);
-        })
+        //     formData.append(key, listingData[key]);
+        // })
 
         // post data here
+        navigate(AppPaths.STRIPE_CHECKOUT);
     }
 
-    if(isLoading){
+    if (isLoading) {
         return <div>data is loading</div>
     }
 
     return (
-        <div className='container grid md:grid-cols-2 gap-x-8'>
-            <div id="shipping-info">
-                <h1>Express Checkout</h1>
-                <div className='grid grid-cols-2'>
-                    <PayPalComponent></PayPalComponent>
-                    <br></br>
-                    <GooglePayComponent></GooglePayComponent>
-                    <br></br>
-                    <p>or continue with credit card</p>
+        <div className='container grid grid-cols-1 md:grid-cols-2 gap-x-8'>
+            <div id="shipping-info" className='order-last p-10 md:order-first'>
+                <div class="inline-flex items-center justify-center w-full my-4 relative">
+                    <hr class="w-full h-px bg-gray-200 border-0" />
+                    <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2">Express Checkout</span>
                 </div>
+                <div className='flex-wrap justify-between md:flex gap-x-2'>
+                    <PayPalComponent></PayPalComponent>
+                    <GooglePayComponent></GooglePayComponent>
+                </div>
+                <div class="inline-flex items-center justify-center w-full relative">
+                    <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                    <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">or</span>
+                </div>
+                {/* continue with credit card */}
 
                 <div>
                     <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
                         <h2 className='mb-6 text-xl'>Contact</h2>
 
-                        <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
+                        <label for="email" className="relative block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address
+                            {!CommonUtil.getUserId() &&
+                                <a href={AppPaths.LOGIN}>
+                                    <span className='absolute right-0 underline'>Log in</span>
+                                </a>
+                            }
+                        </label>
                         <div className="mb-6">
                             <input
                                 {...register("email", { required: true })}
                                 defaultValue={shippingDetails.email}
-                                type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="john.doe@company.com" required />
+                                type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                         </div>
                         <h2 className='mb-6 text-xl'>Shipping address</h2>
 
@@ -285,10 +308,11 @@ function Checkout() {
                             <label for="country" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
                             <select
 
-                                {...register("country", { 
+                                {...register("country", {
                                     onChange: (e) => fetchShippingPrice(e.target.value),
-                                    required: true })}
-                                id="country" 
+                                    required: true
+                                })}
+                                id="country"
                                 defaultValue={shippingDetails.country} // this doesn't seem to work
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 {/* <option selected>Choose a country</option> */}
@@ -368,19 +392,24 @@ function Checkout() {
                 </div>
             </div>
 
-            <div id="order-summary" className='p-10 bg-gray-100'>
+            <div id="order-summary" className='order-first p-10 md:bg-gray-100 md:order-last'>
+                <OrderSummary total={total}>
                 {cartDetailsList.map((item, index) => (
                     <div id="row" className='flex pt-2 flex-inline'>
-                        <div>
-                            <img className='w-20 h-16' src={item.image} />
+                        <div className='relative'>
+                            <img className='w-full h-24' src={"http://192.168.178.82:8000" + item.thumbnail_url} />
+                            <span class="absolute -top-3 -right-3 inline-flex items-center justify-center w-6 h-6 ms-2 text-xs font-semibold text-black bg-opacity-50 bg-gray-500 rounded-full">
+                                {item.quantity}
+                            </span>
+
                         </div>
-                        <div className='grow'>
+                        <div className='ml-4 grow'>
                             <span className='font-mono'>{item.title}</span>
-                            <aside className='text-sm'>{item.option_1}</aside>
-                            <aside className='text-sm'>{item.option_2}</aside>
+                            <aside className='text-sm text-gray-500'>{item.option_1}</aside>
+                            <aside className='text-sm text-gray-500'>{item.option_2}</aside>
                         </div>
                         <div>
-                            <span>{item.quantity}x {item.currency} {item.price}</span>
+                            <span>{item.currency} {item.price}</span>
                         </div>
                     </div>
 
@@ -414,7 +443,7 @@ function Checkout() {
                         <>
                             <div className='flex justify-between text-red-700'>
                                 <span>Discount</span>
-                                <span>-${subtotal - discount}</span>
+                                <span>-${(subtotal - discount).toFixed(2)}</span>
                             </div>
                             <hr></hr>
                         </>
@@ -429,11 +458,11 @@ function Checkout() {
                         <p className='font-semibold'>Total</p>
                         <span>${total}</span>
                     </div>
-
                 </div>
-
-            </div>
             <ToastContainer />
+
+                </OrderSummary>
+            </div>
         </div>
     )
 }

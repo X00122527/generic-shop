@@ -2,17 +2,17 @@ from django.db import models
 from apps.product.models import Product
 from apps.user.models import User
 from djmoney.models.fields import MoneyField
-# Create your models here.
-
+import uuid
 
 class Cart(models.Model):
-    cart_id = models.BigAutoField(verbose_name="cart id", primary_key=True)
+    # cart_id = models.BigAutoField(verbose_name="cart id", primary_key=True)
+    cart_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # aka session id
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class CartItems(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=False)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=False, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
     quantity = models.IntegerField(default=1)
     option_1 = models.CharField(max_length=100)

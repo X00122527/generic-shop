@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import AppPaths from '../../lib/appPaths';
 import CommonUtil from '../../util/commonUtil';
+import CookieUtil from '../../util/cookieUtil';
 
 function ShoppingCart() {
 
@@ -52,16 +53,16 @@ function ShoppingCart() {
     }, []);
 
     const fetchCartItems = () => {
-
+        const cart_id = CookieUtil.getCartId();
+        const url = ServerUrl.BASE_URL + ApiEndpoints.CART+"/"+cart_id;
         const options = {
             method: 'GET',
             headers: {
                 Accept: "application/json, text/plain",
                 "Content-Type": "application/json; charset=UTF-8",
             },
+            // body: JSON.stringify({cart_id: cart_id})
         };
-
-        const url = ServerUrl.BASE_URL + ApiEndpoints.CART;
 
         fetch(url, options)
             .then(response => {
@@ -112,8 +113,8 @@ function ShoppingCart() {
             },
             body: JSON.stringify({ "quantity": Number(qty) })
         };
-
-        const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId);
+        const cartId = CookieUtil.getCartId();
+        const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId).replace(":cartId", cartId);
         console.log(options.body);
 
         fetch(url, options)
@@ -152,8 +153,8 @@ function ShoppingCart() {
                 "Content-Type": "application/json; charset=UTF-8",
             },
         };
-
-        const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId);
+        const cartId = CookieUtil.getCartId();
+        const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId).replace(":cartId", cartId);
         console.log(options.body);
 
         fetch(url, options)
