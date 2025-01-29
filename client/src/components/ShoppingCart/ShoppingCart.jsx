@@ -72,7 +72,7 @@ function ShoppingCart() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 setCartDetailsList(data.items);
                 setCurrency(data.items[0].currency)
                 setIsLoading(false);
@@ -89,7 +89,7 @@ function ShoppingCart() {
         for (let i = 0; i < cartDetailsList.length; i++) {
             subtotal += cartDetailsList[i].price * cartDetailsList[i].quantity;
         }
-        console.log(subtotal);
+        // console.log(subtotal);
         return {
             subtotal: subtotal,
             shipping: getShipping() == 0 ? "Calculated at next step" : getShipping(),
@@ -115,8 +115,8 @@ function ShoppingCart() {
         };
         const cartId = CookieUtil.getCartId();
         const url = ServerUrl.BASE_URL + ApiEndpoints.UPDATE_CART_ITEM.replace(":itemId", itemId).replace(":cartId", cartId);
-        console.log(options.body);
-
+        // console.log(options.body);
+        ///*
         fetch(url, options)
             .then(response => {
                 if (!response.ok) {
@@ -127,13 +127,13 @@ function ShoppingCart() {
             .then(data => {
                 console.log("updated Item: ", data);
 
-                // setCartDetailsList([data]); // this has to insert it back into specific place
+                
                 setCartDetailsList(prevItems => 
                     prevItems.map(item => 
                         item.id === itemId
                         ? data
                         : item
-                    )
+                    ) // todo: fix the flickering
                 );
 
                 toast.success('Cart was updated.', {
@@ -151,6 +151,7 @@ function ShoppingCart() {
             .catch(error => {
                 console.error('Fetch error:', error);
             });
+           // */
     }
 
     const deleteItem = (itemId) => {
@@ -245,7 +246,7 @@ function ShoppingCart() {
                                 <div className="relative flex items-center ">
                                     <button
                                         onClick={e => updateItem(cartDetails.quantity - 1, cartDetails.id)}
-                                        type="button" id="decrement-button" data-input-counter-decrement="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-s-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        type="button"  className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-s-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                         <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16" />
                                         </svg>
@@ -254,11 +255,10 @@ function ShoppingCart() {
                                         defaultValue={cartDetails.quantity}
                                         value={cartDetails.quantity}
                                         onChange={e => updateItem(e.target.value, cartDetails.id)}
-
                                         type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-12 py-2.5 " placeholder="1" required />
                                     <button
                                         onClick={e => updateItem(cartDetails.quantity + 1, cartDetails.id)}
-                                        type="button" id="increment-button" data-input-counter-increment="quantity-input" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-e-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        type="button" className="p-3 bg-gray-100 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 rounded-e-lg h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                         <svg className="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                                         </svg>
