@@ -15,7 +15,6 @@ function ShoppingCart() {
     const [cartDetailsList, setCartDetailsList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currency, setCurrency] = useState('');
-    const [itemCount, setItemCount] = useState(0);
 
     // const cartDetailsList = [
     //     {
