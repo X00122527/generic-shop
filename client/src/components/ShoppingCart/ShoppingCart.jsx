@@ -15,6 +15,7 @@ function ShoppingCart() {
     const [cartDetailsList, setCartDetailsList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currency, setCurrency] = useState('');
+    const [itemCount, setItemCount] = useState(0);
 
     // const cartDetailsList = [
     //     {
@@ -97,10 +98,21 @@ function ShoppingCart() {
         }
     }
 
+    // this is needed to work properly with onBlur since we want to send a request only when a user enters a new qty when input field loses focus
+    const updateCartList=(qty, itemId) => {
+        setCartDetailsList(prevItems => 
+            prevItems.map(item => 
+                item.id === itemId
+                ? {...item, quantity: qty}
+                : item
+            ) 
+        );
+
+    }
 
     const updateItem = (qty, itemId) => {
-
-        if (qty === 0) {
+        console.log('updating item ',itemId, 'to qty of ',qty);
+        if (qty <= 0) {
             removeItem(itemId);
             return;
         }
@@ -200,6 +212,10 @@ function ShoppingCart() {
         calculateCart();
     }
 
+    const handleBlur = () => {
+        console.log("blur triggered");
+    }
+
     return (
         <div className='grid grid-cols-12 mx-1 md:container gap-x-8 gap-y-4'>
 
@@ -252,9 +268,9 @@ function ShoppingCart() {
                                         </svg>
                                     </button>
                                     <input
-                                        defaultValue={cartDetails.quantity}
                                         value={cartDetails.quantity}
-                                        onChange={e => updateItem(e.target.value, cartDetails.id)}
+                                        onChange={e => updateCartList(e.target.value, cartDetails.id)}
+                                        onBlur={e => updateItem(e.target.value, cartDetails.id)}
                                         type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-12 py-2.5 " placeholder="1" required />
                                     <button
                                         onClick={e => updateItem(cartDetails.quantity + 1, cartDetails.id)}
