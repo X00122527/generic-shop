@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import 'flowbite'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -13,7 +13,7 @@ import Accordion from '../Accordion/Accordion';
 import RelatedProducts from './RelatedProducts';
 import { useForm } from "react-hook-form";
 import CookieUtil from "../../util/cookieUtil";
-import { useCart } from './CartProvider';
+import { CartContext } from './CartContext';
 
 const displayMode = {
     option_1: "list", // or list
@@ -21,9 +21,9 @@ const displayMode = {
 } // 
 
 function ProductPage(props) {
-    const { updateCartCount } = useCart();
     const [isLoading, setIsLoading] = useState(true);
-
+    const { cart, setCart } = useContext(CartContext);
+    let param = useParams();
     const [product, setProduct] = useState({
         title: "",
         price: "",
@@ -47,9 +47,6 @@ function ProductPage(props) {
             quantity: 1,
         }
     });
-
-    let param = useParams();
-
 
     useEffect(() => {
         fetchProduct();
@@ -155,8 +152,14 @@ function ProductPage(props) {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                updateCartCount(data.total_items);
+                const updatedCart = [...cart];
+                const itemIndex = updatedCart.findIndex((item) => item.id === data.id);
+                if (itemIndex !== -1) { // update existing cart item's quantity
+                  updatedCart[itemIndex].quantity = data.quantity;
+                } else { // insert new cart item
+                    updatedCart.push({ id: data.id, quantity: data.quantity });
+                }
+                setCart(updatedCart); 
                 toast.success('Item was added to your cart!', {
                     position: "bottom-center",
                     autoClose: 2000,

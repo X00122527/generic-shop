@@ -18,7 +18,8 @@ import Signup from "./components/Sign/Signup";
 import UserView from "./components/User/UserView";
 import MainContainer from "./components/Container/MainContainer";
 import StripeRoute from "./components/Checkout/StripeRoute";
-
+import { CartProvider } from "./components/ProductPage/CartContext";
+import ForgotPassword from "./components/Sign/ForgotPassword";
 const appearance = {
   theme: 'stripe',
 };
@@ -29,6 +30,7 @@ class AppRoutes extends Component {
   render() {
     return (
       <BrowserRouter>
+       <CartProvider>
         <Navbar></Navbar>
         <MainContainer>
           <Routes>
@@ -37,6 +39,7 @@ class AppRoutes extends Component {
             <Route path={AppPaths.SHOP} element={<ProductsPage />} />
             <Route path={AppPaths.LOGIN} element={<Login />} />
             <Route path={AppPaths.SIGN_UP} element={<Signup />} />
+            <Route path={AppPaths.FORGOT} element={<ForgotPassword />} />
             <Route path={AppPaths.CART} element={<ShoppingCart />} />
             <Route path={AppPaths.CHECKOUT} element={<Checkout />} />
             <Route path={AppPaths.USER} element={<UserView />} />
@@ -44,12 +47,13 @@ class AppRoutes extends Component {
               <StripeRoute
                 appearance={appearance}
                 loader={loader}
-               />} >
-              </Route>
+              />} ></Route>
 
           </Routes>
         </MainContainer>
         <Footer></Footer>
+        </CartProvider>
+
 
       </BrowserRouter>
     );

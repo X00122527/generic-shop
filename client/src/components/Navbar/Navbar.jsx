@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import logo from '../../../custom-files/logo.png'
 import AppPaths from '../../lib/appPaths'
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import CommonUtil from "../../util/commonUtil";
 import ServerUrl from '../../api/serverUrl';
 import ApiEndpoints from '../../api/apiEndpoints';
 import CookieUtil from '../../util/cookieUtil';
-// import { useCart } from '../ProductPage/CartProvider';
+import { CartContext } from '../ProductPage/CartContext'; // todo find better place to store it?
 // basic responsive navbar consisting of logo, searchbar and menu 
 
 
@@ -18,10 +18,18 @@ function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { cart } = useContext(CartContext);
+  const cartCountProvider = cart.reduce((sum, item)=> sum + item.quantity, 0);
+
   useEffect(() => {
     const cart_id = CookieUtil.getCartId();
     const url = ServerUrl.BASE_URL + ApiEndpoints.CART+"/"+cart_id;
-
+    // todo - would be worth extracting the whole cart anyway at some point
+    // const itemCount = CookieUtil.getCartItemsCount();
+    // console.log('item count: ', itemCount);
+    // setCartCount(itemCount);
+    setIsLoading(false);
+    /*
     const options = {
       method: 'GET',
       headers: {
@@ -40,13 +48,14 @@ function Navbar() {
       })
       .then(data => {
         console.log(data.items);
-        setCartCount(data.total_items);
+        // setCartCount(data.total_items);
+        setCartCount(CookieUtil.getCartItemsCount(cart_id))
         setIsLoading(false);
       })
       .catch(error => {
         console.error('Fetch error:', error);
       });
-    
+    */
   }, []);
 
 
@@ -132,7 +141,7 @@ function Navbar() {
 
               {!isLoading &&
               <>
-                <span class="absolute top-0 right-0 bg-red-800 text-white text-xs font-medium px-1 rounded-full dark:bg-red-900 dark:text-red-300">{cartCount}</span>
+                <span class="absolute top-0 right-0 bg-red-800 text-white text-xs font-medium px-1 rounded-full dark:bg-red-900 dark:text-red-300">{cartCountProvider}</span>
               </>
             }
               

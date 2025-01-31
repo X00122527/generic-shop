@@ -66,9 +66,48 @@ const setCookie = (cookieName, cookieValue, expairydays = 30) => {
       localStorage.setItem('cart_id', cartId);
       document.cookie = `cart_id=${cartId}; path=/; max-age=7884000;`; // 3 months expiry
   }
-  
+
+  const getCartItemsCount = () => {
+    const existingCart = JSON.parse(localStorage.getItem("cart_items")) || [];
+    const totalItems = existingCart.reduce((sum, item)=> sum + item.quantity, 0);
+    return Number(totalItems);
+  }
+
+  const setCartItemsCount = (itemId, qty) => {
+    // localStorage.getItem('cart_items').get(item)
+    // if(getCartItemsCount()){
+    //   localStorage.setItem('cart_items', getCartItemsCount() + qty);
+    // }else{
+    //   localStorage.setItem('cart_items', qty);
+
+    // }
+    // localStorage.setItem('cart_items', JSON.stringify({...JSON.parse(localStorage.getItem('cart_items')), 
+    //                                     itemId: {"quantity": qty}}));
+
+    
+
+    const existingCart = JSON.parse(localStorage.getItem("cart_items")) || [];
+
+    // Check if the item already exists in the cart
+    const itemIndex = existingCart.findIndex((item) => item.id === itemId);
+
+    if (itemIndex !== -1) {
+      // If item exists, update the quantity
+      existingCart[itemIndex].quantity = qty;
+    } else {
+      // Otherwise, add a new item
+      existingCart.push({ id: itemId, quantity: qty });
+    }
+
+    // Save updated cart back to localStorage
+    localStorage.setItem("cart_items", JSON.stringify(existingCart));
+
+    console.log("Updated Cart:", JSON.parse(localStorage.getItem("cart_items")));
+    
+  }
+
   const deleteCookie = (cookieName) => {
-    document.cookie =
+    document.cookie = 
       cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   };
 
@@ -83,7 +122,9 @@ const setCookie = (cookieName, cookieValue, expairydays = 30) => {
     getCookie: getCookie,
     deleteCookie: deleteCookie,
     logoutClickHandler: logoutClickHandler,
-    getCartId: getCartId
+    getCartId: getCartId,
+    getCartItemsCount: getCartItemsCount,
+    setCartItemsCount: setCartItemsCount
   };
   
   export default CookieUtil;
